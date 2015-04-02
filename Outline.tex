@@ -1,0 +1,76 @@
+\documentclass[a4paper,12pt]{article}
+\hoffset=-47.5pt
+\voffset=0pt
+\textwidth=500pt
+
+\begin{document}
+
+\section{Project Outline}
+\begin{enumerate}
+	\item Abstract
+	\item Personal background (one liner)
+	\item Introduction
+	\begin{itemize}
+		\item Expand ideas in abstract						
+		\item Compare sources of information: 
+		\begin{itemize}
+			\item Description of bibliographic databases such as DBLP
+			\item PubMed - has API, limited to Biomed
+			\item Google Scholar - broader range of topics, needs scraper
+			\item Microsoft Academic Search - has API, but not commonly used
+			\item Web of Science (Thomson Reuters) - API on request
+			\item ScienceDirect (Elsevier) - no API
+			\item \emph{Note: Web of Science and Google Scholar track citations, but PubMed does not.}
+		\end{itemize}
+		\item Explain what PubMed is
+		\item Trends in PubMed usage
+		\end{itemize}
+	\item Currently available solutions:
+	\begin{itemize}
+		\item \textbf{Similar projects}
+		\begin{itemize}
+			\item Academic projects 
+			\item \emph{Note: mostly pre-computed, huge datasets}
+			\item Microsoft Academic Search has a visualisation
+		\end{itemize}
+		\item \textbf{Web frameworks}
+		\begin{itemize}
+			\item Why Python?
+			\item Django vs. Flask
+			\item Pros and cons of MVC
+		\end{itemize}
+		\item \textbf{JavaScript libraries}
+		\begin{itemize}
+			\item Why JavaScript?
+			\item Processing
+			\item D3
+		\end{itemize}
+	\end{itemize}
+	\item Aims - high level description of the project
+	\begin{itemize}
+		\item Visualisation of PubMed query results as a webapp
+		\item Enables searches to be focused through extra parameters that are known to the user
+		\item Organisation of webapp into views: map view, topic view, journal view. Use-case diagram for each.
+		\item Dynamic assignment real world values (people, places) to data on PubMed
+	\end{itemize}
+	\item Objectives in terms of:
+	\begin{itemize}
+		\item High level software architecture
+		\item Methodology and work plan
+	\end{itemize}
+	\item Challenges
+	\begin{itemize}
+		\item Usability
+		\item Graphical presentation - minimising amount of information presented on page at one time
+		\item Ranking
+		\item Determining uniqueness of names and addresses
+	\end{itemize}
+\end{enumerate}
+\clearpage
+
+\section{Abstract}
+\begin{abstract}
+The volume of biomedical literature available online is in an upward trend. Though this heightened discourse within the scientific community is of inarguable benefit, there also comes the task of searching for relevant information, which currently is imposed on the user. The project as outlined in this proposal is a web application that provides a visual interface through which users can explore the citations retrieved from a bibliographic database, thereby focusing their search. Herein, the various online sources of bibliographic data are discussed, with PubMed and its associated API chosen as the most appropriate resource. The various scenarios of user interaction are explored, in order to rationalise the objectives and select the appropriate technologies for the project. Python web frameworks and JavaScript libraries are compared and contrasted, leading to the proposed usage of Django and D3, respectively. A development plan is outlined for the project and any additional features, time permitting. 
+\end{abstract}
+
+\end{document}
