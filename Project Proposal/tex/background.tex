@@ -3,38 +3,28 @@
 \begin{document}
 
 \chapter{Background}
-\section{Comparison of Bibliographic Databases and Search Engines}
-When faced with the task of choosing a tool for finding academic literature online, researchers are spoilt for choice. There exists a range of bibliographic databases and search engines that vary in terms of the services provided, and the subjects covered. This project focuses on services that at least partially comprise citations concerning the Biomedical Sciences, as I have experience with the current obstacles associated with usage of these.\\ \par
+\section{Comparison of Bibliographic Resources}
+When faced with the task of choosing a tool for finding academic literature online, researchers are spoilt for choice. There exists a range of bibliographic databases and search engines that vary in terms of the services provided, and the subjects covered. This project focuses on services that at least partially comprise citations concerning the Biomedical Sciences, as I have experience with the current obstacles associated with usage of these.\\
 
-The main factors that influenced the technology chosen are as follows, in descending order of importance:
+\noindent The main factors that influenced the technology chosen are as follows, in descending order of importance:
 \begin{enumerate}
 \item Terms of use
-\item Types of data available for retrieval
-\item Personal and general familiarity of the database
+\item Data fields available for retrieval
 \item Types of citations included
 \end{enumerate}
 
-It is of primary importance that the usage of data retrieved is covered by the terms and conditions of the service. As the intention is to make the project publicly accessible as a web application, this restriction rules out Web of Science (Thomson Reuters), Scopus and ScienceDirect (both Elsevier). Alternatives PubMed, Google Scholar and Microsoft Academic Search can all be used for non-commercial purposes.
+\noindent \\ It is of primary importance that the usage of data retrieved is covered by the terms and conditions of the service. As the intention is to make the project publicly accessible as a web application, this restriction rules out Web of Science (Thomson Reuters), Scopus and ScienceDirect (both Elsevier). Alternatives PubMed, Google Scholar and Microsoft Academic Search can all be used for non-commercial purposes.
 
-Microsoft Academic Search (MAS) is a search engine that encompasses citations from multiple fields across academia. The described goals of the system align well with those of this project, in that data is assigned value based on real-world information \cite{microsoft-help}. These unique IDs can be retrieved using the API, making MAS an attractive resource for this project. The largest caveat of MAS is that it is a beta release and currently does not appear to be in active development; the latest update was released in January 2013 \cite{microsoft-help} and a blog post from Nature News reported that the number of indexed documents has been in decline since 2010 \cite{nature-news}. It is important for the project to be able to access recent publications, and for this reason MAS is not appropriate.
+\noindent \subsection{Microsoft Academic Search}
+Microsoft Academic Search (MAS) is a search engine that encompasses citations from multiple fields across academia. The described goals of the system align well with those of this project, in that data is assigned value based on real-world information\cite{microsoft-help}. These unique IDs can be retrieved using the API, making MAS an attractive resource for this project. The largest caveat of MAS is that it is a beta release and currently does not appear to be in active development; the latest update dates back to January 2013\cite{microsoft-help} and a blog post from Nature News reported that the number of indexed documents has been in decline since 2010\cite{nature-news}. It is important for the project to be able to access recent publications, and for this reason MAS is not appropriate.
 
-Google Scholar is a search engine that uses a ranking algorithm
+\noindent \subsection{Google Scholar}
+Google Scholar is a search engine that indexes journal articles and related materials, returning results according to a ranking algorithm. It is currently not possible to retrieve the institution address or author keywords, therefore the data is not detailed enough to inform the web application alone. However, one field with potential utility is the number of citations a paper has received. Due to the lack of an API, a scraper such as the open-source Python module scholar.py\cite{scholar} is required to retrieve this data.
 
-PubMed - API
-Google Scholar - need scraper
- 
- *-blx.bib
- *.bbl
- *.bcf
- *.blg
- *.run.xml
+\noindent \subsection{PubMed}
+PubMed is a database and search engine maintained by the National Center for Biotechnology Information (NCBI) as part of a suite of databases related to health and the Life Sciences. PubMed comprises of citations for a broad range of subjects and resources from the Medical Literature Analysis and Retrieval System Online (MEDLINE) database as well as full-length texts available from PubMed Central. At the time of writing, the home page\cite{pubmed} states that over 24 million citations have been indexed, a process that occurs . Of importance to the implementation of this project, NCBI has built a public API for retrieval of document summaries from PubMed in either XML or JSON format. Related topics supplied by the authors are listed as either Medical Subject Headings (MeSH terms) or, if none are considered appropriate, keywords. MeSH provides a medical vocabulary for topics, allowing for hierarchical organisation of concepts and disambiguation due to medical terminology\cite{mesh}. A disadvantage of using PubMed is that citations are not tracked, hence the potential for a combined approach with Google Scholar. Taking all factors into account, I have concluded that PubMed is the most pertinent source of data for this project.
 
-\section{PubMed}
-This project will utilise PubMed, a database and search engine maintained by the National Center for Biotechnology Information (NCBI) as part of a suite of health-related databases as available at http://www.ncbi.nlm.nih.gov/. PubMed enables users to search through a large number of entries on the Medical Literature Analysis and Retrieval System Online (MEDLINE) database as well as full-length texts available from PubMed Central. At the time of writing PubMed is comprised of over 24 million citations, covering a broad range of biomedical subjects and resources. Of importance to the implementation of this project, NCBI provides a public API for retrieval of document summaries from PubMed in either XML or JSON format. \\
-\newline
-
-%Journals are entered into MEDLINE upon passing review by a select committee, giving PubMed the benefit of curated content. \emph{linker sentence here. Do I need to say again that there are lots of papers?} A search on PubMed for journal articles and reviews published in 1990 returns 408,502 results\footnote{Both queries were run on the 17th March, 2015}, whereas the same search for the year 2013 yields 1,133,536. \\
-%\newline
-%With such a wealth of information available, the task of searching for articles requires increasingly sophisticated tools. Dogan et al (2009) analysed a dataset of users? PubMed queries and found that more than a third returned over 100 results. Clearly there is a need for tools allowing users to focus their search. In table 1 it can be seen that 44\% of queries contained a bibliographic search term, such as the name of an author, a journal, or a specific article. This suggests that many searches are directed, presumably based on pre-existing knowledge of the desired result. Other top search term categories were disorders, genes, proteins, chemicals and drugs, CAN BE FOUND IN MESH TERMS DESCRIBE MESH TERMS GODDAMIT. White et al (White, Dumais and Teevan, 2008) have described the significantly different characteristics of medical professionals? queries compared to a control group non-experts. What did they find?
+\section{PubMed: Trends and Usage}
+In table 1 it can be seen that 44\% of queries contained a bibliographic search term, such as the name of an author, a journal, or a specific article. This suggests that many searches are directed, presumably based on pre-existing knowledge of the desired result. Other top search term categories were disorders, genes, proteins, chemicals and drugs, CAN BE FOUND IN MESH TERMS DESCRIBE MESH TERMS GODDAMIT.\cite{white} have described the significantly different characteristics of medical professionals? queries compared to a control group non-experts. What did they find? Mention MyNCBI account (different use case)?
 
 \end{document}
