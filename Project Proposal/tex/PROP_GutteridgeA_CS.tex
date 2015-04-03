@@ -1,6 +1,10 @@
 \documentclass[11pt, a4paper]{report}
 \usepackage{subfiles}
 
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage[backend=bibtex]{biblatex}
+\addbibresource{../bib/proposal.bib}
+
 \begin{document}
 
 \subfile{title}
@@ -8,5 +12,7 @@
 \tableofcontents
 \subfile{introduction}
 \subfile{background}
+
+\printbibliography[heading=bibintoc]
 
 \end{document}
