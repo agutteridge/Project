@@ -1,18 +1,46 @@
 \documentclass[11pt, a4paper]{report}
-\usepackage{subfiles}
 
+% overriding chapter formatting
+\makeatletter
+\def\@makechapterhead#1{%
+  %%%%\vspace*{50\p@}% %%% removed
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+        \huge\bfseries \@chapapp\space \thechapter
+        \par\nobreak
+        \vskip 20\p@
+    \fi
+    \interlinepenalty\@M
+    \Huge \bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+\makeatother
+
+\usepackage{subfiles}
 \usepackage[nottoc,numbib]{tocbibind}
-\usepackage[backend=bibtex]{biblatex}
+\usepackage[backend=bibtex,sorting=none,style=numeric]{biblatex}
+\usepackage{geometry}
+
 \addbibresource{../bib/proposal.bib}
 
 \begin{document}
 
 \subfile{title}
 \subfile{abstract}
+
+\newgeometry{margin=2.54cm, top=0cm}
 \tableofcontents
+\restoregeometry
+
+\newgeometry{margin=2.54cm}
 \subfile{introduction}
 \subfile{background}
+\subfile{aims}
+\subfile{objectives}
+\restoregeometry
 
+\newgeometry{margin=2.54cm, top=0cm}
 \printbibliography[heading=bibintoc]
+\restoregeometry
 
 \end{document}
