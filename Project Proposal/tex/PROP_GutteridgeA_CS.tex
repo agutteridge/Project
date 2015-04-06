@@ -20,6 +20,12 @@
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage[backend=bibtex,sorting=none,style=numeric]{biblatex}
 \usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
 
 \addbibresource{../bib/proposal.bib}
 
@@ -36,6 +42,7 @@
 \subfile{introduction}
 \subfile{background}
 \subfile{aims}
+\subfile{related}
 \subfile{objectives}
 \restoregeometry
 
