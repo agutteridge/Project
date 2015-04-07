@@ -3,18 +3,17 @@
 
 \chapter{Aims}
 \section{Motivation}
-Data in bibliographic databases are intrinsically related to real-world concepts, but despite this are often stored and presented as strings devoid of context bar the field descriptor. In cases of a 1:1 relationship between string and concept, for example a journal title, the field can be specified in order to retrieve relevant results. This approach is inadequately descriptive in cases of ambiguity; for example it is possible for addresses and names to be written in multiple ways and for multiple authors to have the same name. This problem is known as name-entity disambiguation (NED), and can be circumvented by mapping content from external knowledge bases onto data\cite{hoffart}. In a study analysing PubMed usage in the duration of one month, 44\% of queries contained a bibliographic search term, such as the name of an author or a journal title\cite{dogan}. This suggests that many searches are directed by pre-existing knowledge of the desired result. For these use cases, an additional layer of geographical information linking institution and author to entities may be of benefit to the user. In the same study, queries containing topic-specific keywords including disorders, genes, proteins, chemicals and drugs occurred in 20\% of instances. Adding semantic information to scientific concepts---contained in MeSH terms and author keywords on PubMed---would enable categorisation and consequently informative visualisation of search results. This project will present an approach for representing the connections between bibliographic data to more accurately reflect the real world, with the intention of enriching the user's interaction with data and thus smoothing the search for information. 
+Data in bibliographic databases are intrinsically related to real-world concepts, but despite this are often stored and presented as strings devoid of context bar the field descriptor. In cases of a 1:1 relationship between string and concept, for example a journal title, the field can be specified in order to retrieve relevant results. This approach is inadequately descriptive in cases of ambiguity; for example it is possible for addresses to be written in multiple ways, and for terms to have multiple synonyms. This problem is known as name-entity disambiguation (NED), and can be circumvented by mapping content from external knowledge bases onto data\cite{hoffart}. In a study analysing PubMed usage in the duration of one month, 44\% of queries contained a bibliographic search term, such as the name of an author or a journal title\cite{dogan}. This suggests that many searches are directed by pre-existing knowledge of the desired result. For these use cases, an additional layer of geographical information linking institutions to entities may be of benefit to the user. In the same study, queries containing topic-specific keywords including disorders, genes, proteins, chemicals and drugs occurred in 20\% of instances. Adding semantic information to scientific concepts---contained in MeSH terms and author keywords on PubMed---would enable categorisation and consequently informative visualisation of search results. This project will present an approach for representing the connections between bibliographic data to more accurately reflect the real world, with the intention of enriching the user's interaction with data and thus smoothing the search for information. 
 
 \section{List of Aims}
 Addressing the following two key issues will constitute the core aims of the project:
 \begin{enumerate}
-\item the low affinity between data and information relating to:
+\item The low affinity between data and information relating to:
 	\begin{itemize}
-	\item institutional addresses,
-	\item author names, and 
-	\item subject keywords, and
+	\item institutional addresses
+	\item subject keywords
 	\end{itemize}
-\item the inefficiency of information retrieval experienced by the user.
+\item The lack of interactivity experienced by the user when retrieving information.
 \end{enumerate}
 
 \end{document}
