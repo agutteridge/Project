@@ -6,7 +6,7 @@
 Comparable systems will be reviewed and contrasted in order to provide context to the proposed project.
 
 \section{GoPubMed: An Ontology-Driven Search Engine}
-Developed by Michael Schroeder and colleagues at Dresden University, GoPubMed is a server and web interface that provides PubMed search results informed by the Gene Ontology database\cite{doms}. By extracting terms present in the Gene Ontology database from abstracts, GoPubMed has an improved vocabulary for genes and the gene products, enabling discovery of relevant papers that may be missed by the default PubMed search algorithm. The web interface also has additional functionality by providing shortcuts to 'Highly Related Concepts', authors and locations (Fig.1a), as well as visual representations of the data (Fig.1b) \\
+Developed by Michael Schroeder and colleagues at Dresden University, GoPubMed (\url{http://gopubmed.com/}) is a server and web interface that provides PubMed search results informed by the Gene Ontology database\cite{doms}. By extracting terms present in the Gene Ontology database from abstracts, GoPubMed has an improved vocabulary for genes and the gene products, enabling discovery of relevant papers that may be missed by the default PubMed search algorithm. The web interface also has additional functionality by providing shortcuts to 'Highly Related Concepts', authors and locations (Fig.1a), as well as visual representations of the data (Fig.1b) \\
 
 \begin{figure}
 	\begin{subfigure}{1\textwidth}
@@ -34,25 +34,25 @@ The bibliographic search engine Microsoft Academic Search has the potential to b
 \caption{A screenshot of Academic Map after clicking on an institution (Oxford University). Each node represents an academic that has published at that location, and selecting this will open the author page on MAS.}
 \end{figure}
 
-
 \section{VOSviewer: Graphical Representation of Networks from Citation Data}
-VOSviewer is a bibliometric network visualisation tool developed by Nees Jan van Eck and Ludo Waltman at Leiden University, designed to enable users to produce clear and informative maps that show relationships within large citation datasets\cite{eck-waltman2}. It is a Java application that is able to handle exported data from PubMed, Web of Science and Scopus, and is free to download and use. Relevant terms are mined from titles and abstracts by extraction and evaluation of noun phrases\cite{eck-waltman1}, allowing creation of network maps based on terms (Fig.3a), organisations or authors (Fig.3b). It is important to note that due to the implementation of bespoke natural language processing of abstracts and titles, this program does not take MeSH or author keywords into consideration. This is an advantage if PubMed is not the sole source of data, or if none are supplied by the authors. For projects that specifically handle data exported from PubMed, it is likely beneficial to use the hierarchical structure of the MeSH vocabulary; doing so aids the separation of synonyms with identical meanings, and allows the developer to specify headings to include or exclude. The clustering algorithms developed for this piece of software go beyond the scope of this project, as the intention is to present the user with a dynamic interface that is transitory by nature. For this reason, accurate representation of the connections between nodes is unnecessary and emphasis will be placed on the speed and ease of use of the data visualisation method.
+VOSviewer (\url{http://vosviewer.com/}) is a bibliometric network visualisation tool developed by Nees Jan van Eck and Ludo Waltman at Leiden University, designed to enable users to produce clear and informative maps that show relationships within large citation datasets\cite{eck-waltman2}. It is a Java application that is able to handle exported data from PubMed, Web of Science and Scopus, and is free to download and use. Relevant terms are mined from titles and abstracts by extraction and evaluation of noun phrases\cite{eck-waltman1}, allowing creation of network maps based on terms (Fig.3a), organisations or authors (Fig.3b). It is important to note that due to the implementation of bespoke natural language processing of abstracts and titles, this program does not take MeSH or author keywords into consideration. This is an advantage if PubMed is not the sole source of data, or if none are supplied by the authors. For projects that specifically handle data exported from PubMed, it is likely beneficial to use the hierarchical structure of the MeSH vocabulary; doing so aids the separation of synonyms with identical meanings, and allows the developer to specify headings to include or exclude. The clustering algorithms developed for this piece of software go beyond the scope of this project, as the intention is to present the user with a dynamic interface that is transitory by nature. For this reason, accurate representation of the connections between nodes is unnecessary and emphasis will be placed on the speed and ease of use of the data visualisation method.
 
 \begin{figure}
 	\begin{subfigure}{1\textwidth}
 		\includegraphics[width=\textwidth]{../lib/images/VV1}
 		\label{fig:VV1}
-		\subcaption{Terms map generated from a PubMed dataset of 1042 citations with 'IDH1' and 'cancer' searched in all fields\footnotemark[2]. Nodes are coloured by term type, sized by occurrence and clustered by co-occurrence. These features are customisable as can be seen from the panes on each side.}
+		\subcaption{Terms map generated from a PubMed dataset of 1042 citations with 'IDH1' and 'cancer' searched in all fields\renewcommand{\thefootnote}{\alph{footnote}}\footnotemark[1]. Nodes are coloured by term type, sized by occurrence and clustered by co-occurrence. These features are customisable as can be seen from the panes on each side.}
 	\end{subfigure}
 	\par\bigskip
 	\begin{subfigure}{1\textwidth}
 		\includegraphics[width=\textwidth]{../lib/images/VV2}
 		\label{fig:VV2}
-		\subcaption{Authors map generated from a PubMed dataset of 2895 citations with 'Alzheimer's Disease' in the MeSH terms, published since January 1st 2014\footnotemark[2]. Node colourings, clusters and lines are determined by co-citations.}
+		\subcaption{Authors map generated from a PubMed dataset of 2895 citations with 'Alzheimer's Disease' in the MeSH terms, published since January 1st 2014\footnote{Query ran 08/04/15.}. Node colourings, clusters and lines are determined by co-citations.}
 	\end{subfigure} 
 \caption{Network maps created using VOSviewer.}
-\footnotetext[2]{Query ran 08/04/15.}
 \end{figure}
+
+\footnotetext[2]{Query ran 08/04/15.}
 
 \section{Discussion}
 These three technologies combined solve many of the problems that this project aims to address, namely disambiguation of institutions, graphical representation of results, and network visualisation of scientific terms. GoPubMed is an interesting example of extending the PubMed experience by both directly processing search results and presenting additional methods for filtering and selecting datasets. The key differences between GoPubMed and the proposed project lie in the user interface. I propose a simplified set of filter categories, based on the aforementioned research carried out on PubMed usage\cite{dogan}, and a visual representation of results. The latter will be influenced by the analysis of Academic Map and VOSviewer, which have informed the project in terms of interactivity of geographical maps and presentation of interconnected data, respectively. 

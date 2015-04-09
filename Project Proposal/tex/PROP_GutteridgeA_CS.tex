@@ -23,10 +23,22 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{hyperref}
 
 % ensures that figures are numbered and sequential
 \usepackage{chngcntr}
 \counterwithout{figure}{chapter}
+
+% defining header and footer style
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\nouppercase{\leftmark}}
+\chead{}
+\rhead{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\chaptermark}[1]{%
+\markboth{#1}{}}
 
 \addbibresource{../bib/proposal.bib}
 
