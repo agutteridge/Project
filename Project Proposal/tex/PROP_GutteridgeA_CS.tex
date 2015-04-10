@@ -20,10 +20,15 @@
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage[backend=bibtex,sorting=none,style=numeric]{biblatex}
 \usepackage{geometry}
-\usepackage{graphicx}
-\usepackage{caption}
-\usepackage{subcaption}
 \usepackage{hyperref}
+
+% changing caption font size
+\usepackage[skip=2pt,font=scriptsize]{caption}
+\usepackage[skip=2pt,font=scriptsize]{subcaption}
+
+% for side captions
+\usepackage[pdftex]{graphicx}
+\usepackage{sidecap}
 
 % ensures that figures are numbered and sequential
 \usepackage{chngcntr}
@@ -53,14 +58,18 @@
 
 \newgeometry{margin=2.54cm}
 \subfile{introduction}
-\subfile{background}
 \subfile{aims}
 \subfile{related}
 \subfile{objectives}
 \restoregeometry
 
 \newgeometry{margin=2.54cm, top=0cm}
+\raggedright
 \printbibliography[heading=bibintoc]
+\restoregeometry
+
+\newgeometry{margin=2.54cm}
+\subfile{appendix}
 \restoregeometry
 
 \end{document}
