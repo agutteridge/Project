@@ -12,7 +12,7 @@
     \fi
     \interlinepenalty\@M
     \Huge \bfseries #1\par\nobreak
-    \vskip 40\p@
+    \vskip 20\p@
   }}
 \makeatother
 
@@ -21,6 +21,9 @@
 \usepackage[backend=bibtex,sorting=none,style=numeric]{biblatex}
 \usepackage{geometry}
 \usepackage{hyperref}
+\usepackage{footnote}
+\usepackage{pdflscape}
+\usepackage{textcomp}
 
 % changing caption font size
 \usepackage[skip=2pt,font=scriptsize]{caption}
@@ -33,6 +36,7 @@
 % ensures that figures are numbered and sequential
 \usepackage{chngcntr}
 \counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
 
 % defining header and footer style
 \usepackage{fancyhdr}
@@ -61,15 +65,12 @@
 \subfile{aims}
 \subfile{related}
 \subfile{objectives}
+\subfile{conclusion}
 \restoregeometry
 
 \newgeometry{margin=2.54cm, top=0cm}
 \raggedright
 \printbibliography[heading=bibintoc]
-\restoregeometry
-
-\newgeometry{margin=2.54cm}
-\subfile{appendix}
 \restoregeometry
 
 \end{document}
