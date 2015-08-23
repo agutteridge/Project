@@ -1,0 +1,25 @@
+%\documentclass[Report.tex]{subfiles}
+\documentclass{report}
+\begin{document}
+
+\chapter{Software Architecture}
+\section{Overview}
+One of the main challenges of the project was to integrate the various programming languages and technologies required along the pipeline, that are each suited to their specific task but not immediately compatible with one another. Figure X outlines the flow of the application and the key technologies used for each stage. The details of each component will be explored in the next section, Implementation.
+
+\begin{enumerate}
+\item{\textbf{Interaction of the user with the browser}} 
+\newline The client side of the web application is presented in a modern browser that can support the use of Scalable Vector Graphics (SVG) that are integral to this D3 application. Examples of this are as Mozilla Firefox 38+, Google Chrome 31+, or Internet Explorer 9+ (although manual scaling is required with the latter\cite{caniuse}. A text form (!!! is it a form?) is available upon loading of the web page for the user to enter their search term into, SLIDER FOR DATES?
+\item{\textbf{Retrieving data from PubMed}}
+\item{Assignment of locations to addresses}
+\item{Implementation of a web framework}
+\item{Data visualisation} 
+\end{enumerate}
+
+\end{document}
+
+FOR IMPLEMENTATION:
+Explain more about what an SVG is.
+
+Research carried out in the planning stage of the project suggested that users are often looking for a paper they are already familiar with, and so another field is available for searching the author fields only. Increasing the specificity of this query with a simple interface allows the user to take full advantage of the additional functionality, whilst the search string is converted to an 'advanced' query server-side.
+
+From here, a loading GIF is served to indicate to the user that the app is functional, and that results are incoming. this is important to improve the user's experience, and to prevent confusion at potentially long wait times.

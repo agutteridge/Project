@@ -1,0 +1,76 @@
+\documentclass[11pt, a4paper]{report}
+
+% overriding chapter formatting
+\makeatletter
+\def\@makechapterhead#1{%
+  %%%%\vspace*{50\p@}% %%% removed
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+        \huge\bfseries \@chapapp\space \thechapter
+        \par\nobreak
+        \vskip 20\p@
+    \fi
+    \interlinepenalty\@M
+    \Huge \bfseries #1\par\nobreak
+    \vskip 20\p@
+  }}
+\makeatother
+
+\usepackage{subfiles}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage[backend=bibtex,sorting=none,style=numeric]{biblatex}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{footnote}
+\usepackage{pdflscape}
+\usepackage{textcomp}
+
+% changing caption font size
+\usepackage[skip=2pt,font=scriptsize]{caption}
+\usepackage[skip=2pt,font=scriptsize]{subcaption}
+
+% for side captions
+\usepackage[pdftex]{graphicx}
+\usepackage{sidecap}
+
+% ensures that figures are numbered and sequential
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+
+% defining header and footer style
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\nouppercase{\leftmark}}
+\chead{}
+\rhead{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\chaptermark}[1]{%
+\markboth{#1}{}}
+
+%\addbibresource{../bib/report.bib}
+
+\begin{document}
+
+%\subfile{title}
+%\subfile{abstract}
+
+\newgeometry{margin=2.54cm, top=0cm}
+\tableofcontents
+\restoregeometry
+
+\newgeometry{margin=2.54cm}
+\subfile{report_intro}
+\subfile{softarch}
+%\subfile{related}
+%\subfile{objectives}
+%\subfile{conclusion}
+\restoregeometry
+
+\newgeometry{margin=2.54cm, top=0cm}
+\raggedright
+%\printbibliography[heading=bibintoc]
+\restoregeometry
+
+\end{document}
