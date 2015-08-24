@@ -49,7 +49,7 @@
 \renewcommand{\chaptermark}[1]{%
 \markboth{#1}{}}
 
-%\addbibresource{../bib/report.bib}
+\addbibresource{../bib/reportbiblio.bib}
 
 \begin{document}
 
@@ -70,7 +70,8 @@
 
 \newgeometry{margin=2.54cm, top=0cm}
 \raggedright
-%\printbibliography[heading=bibintoc]
+\nocite{*}
+\printbibliography[heading=bibintoc]
 \restoregeometry
 
 \end{document}
