@@ -3,7 +3,9 @@
 
 \chapter{Software Architecture}
 \section{Architecture pattern}
-The application follows the Model-View-Controller (MVC) software architectural pattern, as is currently common with systems that have an emphasis on interactivity via a graphical user interface. Figure X shows how the elements of the project align with MVC. The user interacts with elements of the view, in this case a text input form and a graphical button for submission of input to the application. The view specifies the routes through which the data is sent and displayed, as well as the templates for organisation of page content\cite{mozilla_mvc}. The controller receives the input through the web framework and calls functions within the model that can retrieve relevant data based on the search term.  After the data processing is complete, it is sent from the controller to the view to generate output for the user. \newline
+The application follows the Model-View-Controller (MVC) software architectural pattern, as is currently common with systems that have an emphasis on interactivity via a graphical user interface. MVC has its origins in Smalltalk applications built in the 1980s that SMALLTALK HISTORY
+
+\noindent Figure X shows how the elements of the project align with MVC. The user interacts with elements of the view, in this case a text input form and a graphical button for submission of input to the application. The view specifies the routes through which the data is sent and displayed, as well as the templates for organisation of page content\cite{mozilla_mvc}. The controller receives the input through the web framework and calls functions within the model that can retrieve relevant data based on the search term.  After the data processing is complete, it is sent from the controller to the view to generate output for the user. \newline
 
 \begin{figure}[h!]
 	\includegraphics[width=\textwidth]{../lib/images/mvc.png}
