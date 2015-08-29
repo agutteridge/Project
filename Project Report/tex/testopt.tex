@@ -9,6 +9,33 @@ how does unittest.mock work?
 \subsection{Manual Testing}
 \section{Optimisation}
 \subsection{Geocoding}
+The overhead of geocoding an address for the first time is high; the Text Search service in the Google Places API returns the top ten results that match the input parameters. In order to try and make the results more precise, the 'types' parameter is provided to specify that results should be either a university, a hospital, or an 'establishment' which is set as the default if a type is not present. In order to maximise the number of meaningful results achieved by the API, the input must be optimised to improve the success rate and accuracy of the geocoding process. A number of formatting options were empirically tested, enabling an informed decision to be made for the geocoding function in the application.\newline
+
+\noindent In order to have confidence in applying these findings to the larger population of papers available on PubMed, a dataset with papers on a range of topics, from various journals, and originating from numerous countries was required. Statistics on the publishing distribution between countries was found on Medline Trend\cite{medlinetrend}, though the data was limited to a date range of 2008-2012. Table \ref{tab:countries} lists the ten countries with the most papers, their percentage share and the corresponding number of papers used in the dataset. Though the intention was to have the number of addresses reflect these data, each paper in the dataset has multiple affiliation addresses, skewing the distribution. Thus, the primary feature of the dataset is that each of these countries is represented at least once. 33 unique papers and 178 addresses were assessed in total. To investigate the accuracy of each method, the distance between the true location and the geographical coordinates as assigned by the Google Places API were compared. Expected locations were found manually using the Google Maps websites, and therefore were tested at a smaller scale (10 papers and 18 addresses). It is also important to note that the allocation of correct addresses was somewhat subjective, as the vast majority of the locations were not familiar. \newline
+
+\begin{table}
+\begin{center}
+    \begin{tabular}{ | l | c | c | }\hline
+    \textbf{Country} & \textbf{Papers (\%)} & \textbf{Papers in} \\
+     & &\textbf{dataset}\\ \hline
+    USA & 28.1 & 14\\ \hline
+    China & 8.5 & 4\\ \hline
+    United Kingdom & 7.7 & 4\\ \hline
+    Japan & 5.8 & 3\\ \hline
+    Germany & 5.1 & 3\\ \hline
+    Italy & 3.7 & 2\\ \hline
+    Canada & 3.5 & 2\\ \hline
+    France & 3.5 & 2\\ \hline
+    Australia & 2.6 & 1\\ \hline
+    India & 2.6 & 1\\ \hline
+    \end{tabular}
+    \label{tab:countries}
+    \caption{Percentage share of published papers between 2008 and 2012 for the 10 countries with the highest values.}
+\end{center}
+\end{table}\newline
+
+\noindent The first optimisations were carried out after observing trends during development.
+
 \subsection{Querying MySQL}
 \subsection{Organising Hierarchical Data}
 \end{document}
