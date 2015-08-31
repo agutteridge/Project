@@ -25,6 +25,31 @@
 \usepackage{pdflscape}
 \usepackage{textcomp}
 
+% formatting of code snippets
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
 % changing caption font size
 \usepackage[skip=2pt,font=scriptsize]{caption}
 \usepackage[skip=2pt,font=scriptsize]{subcaption}
@@ -65,6 +90,7 @@
 \subfile{softarch}
 \subfile{impl}
 \subfile{testopt}
+\subfile{appendix}
 %\subfile{objectives}
 %\subfile{conclusion}
 \restoregeometry
