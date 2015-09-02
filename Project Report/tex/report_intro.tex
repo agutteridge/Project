@@ -4,43 +4,24 @@
 \chapter{Introduction}
 \section{Project Background}
 \subsection{The Problem}
-In the 1990s, the availability of digital content increased as popularity of the World Wide Web and the internet grew. Academic publishing was not left out of this trend, with long-established journals such as Nature creating websites for all aspects of the pipeline, from submission to publication of papers online\cite{nature-history}. This increase in accessibility has contributed toward an exponential growth of literature\cite{hunter-cohen}, that can make the search for relevant papers challenging. PubMed, a freely-available online database for medical texts, is a mainstay for many users in the health and academic sectors, and is accessed by millions of users daily\cite{dogan}. However, the web interface presents a simplistic approach to information retrieval, with minimal analysis of results and a relatively steep learning curve for achieving satisfactory results with text queries alone. This project aims to enrich and inform the search routine of users by visualising information extracted from the title, abstract, and bibliographic data of the retrieved PubMed citations.
+The last few decades have seen the availability of digital content dramatically increase, as adoption of the World Wide Web and other internet technologies became widespread both at home and in the workplace. Academic publishing was soon to capitalise on this trend, with long-established journals such as Nature creating websites for all aspects of the publishing pipeline, from submission to publication of papers online, in the '90s\cite{nature-history}. This increase in accessibility has contributed toward an exponential growth of literature\cite{hunter-cohen} that can make the search for relevant papers challenging in the present day. PubMed, a freely-available online database for medical texts maintained by the National Center for Biotechnology Information of the United States, is a mainstay for many users in the health and academic sectors, and is accessed by millions of users daily\cite{dogan}. However, the web interface presents a simplistic approach to information retrieval, with minimal analysis of results and a relatively steep learning curve for achieving satisfactory results with text queries alone. WRAP UP
 
 \subsection{Related Work}
-A great deal of work has been carried out on the analysis and optimisation of PubMed as a service. The proposal discussed a small number of web applications that allow users to view citations in different ways, such as through the generation of static graphs with GoPubMed\cite{gopubmed}, or by creating a social network-like web application for authors with Microsoft Academic Search\cite{mas}. Of note, GoPubMed implements a text recognition algorithm in order to extract terms that are known to belong to a specific hierarchical vocabulary, the Gene Ontology. Citations are then associated with these terms, allowing efficient categorisation and therefore retrieval upon the execution of a relevant query. To my knowledge, GoPubMed does not disambiguate terms, which may result in a lower success rate of assigning vocabulary entries to papers.
+A great deal of work has been carried out on the analysis and optimisation of PubMed as a service. The proposal discussed a small number of web applications that allow users to view citations in different ways, such as through the generation of static graphs with GoPubMed\cite{gopubmed}, or by creating a social network-like web application for authors with Microsoft Academic Search\cite{mas}. Of note, GoPubMed implements a text recognition algorithm in order to extract terms that are known to belong to a specific hierarchical vocabulary, the Gene Ontology. Citations are then associated with these terms, allowing efficient categorisation and therefore retrieval upon the execution of a relevant query. To my knowledge, GoPubMed does not disambiguate terms, which may result in a lower success rate of assigning vocabulary entries to papers. This approach is adopted by NAME RELATED ??
 
-The key features of this project are the usage and integration of citation retrieval, semantic categorisation and geocoding services, enabling the gap between services currently available online (basic search, some visualisation but little), and those developed by researches/ those working at UMLS, and are not available or even known outside of the academic circles they were created by, to be bridged. The key technologies: MetaThesaurus and MetaMap, will be discussed in brief.??
+\subsection{Objectives}
+Upon completion, it was envisioned that this application would:
 
-WRAP UP
+\begin{enumerate}
+\item Investigate the utility of citation data retrieved from PubMed, particularly with relation to:
+	\begin{itemize}
+	\item Semantic keywords mined from the title, abstract, keywords and Medical Subject Headings,
+	\item Addresses as listed in the author affiliations,
+	\end{itemize}
+\item Organise medical/biological concepts into a hierarchy parseable by a client-side library,
+\item Display these data in relation to each citation in a web browser, and enable the user to interact with elements of the webpage.
+\end{enumerate}
 
 The sections of this report comprise the following: the main features of the application and the project specification are outlined in Chapter 2. The organisation of the software architecture is introduced in Chapter 3. The separate components of the application are explored in further detail in Chapter 4, including background information concerning the external services, where possible. Methods of testing and optimisation are presented in Chapter 5, and the report is concluded in Chapter 6, within which the merits, limitations and future developments of the project are discussed.
-
-then talk about the main objectives of the project.
-
-A good technical report/thesis Introduction does four things:
-
-1.       It introduces the problem and motivation for the study.
-
-    Tell the reader what the topic of the report is.
-    Explain why this topic is important or relevant.
-
-2.       It provides a brief summary of previous engineering and/or scientific work on the topic.
-
-    Here you present an overview what is known about the problem.  You would typically cite earlier studies conducted on the same topic and/or at this same site, and in doing so, you should reveal the yawning void in the knowledge that your brilliant research will fill.
-    If you are writing a thesis, you?re going to need a full-blown literature review with very specific details of all of the scientific or engineering work done on the topic to date.  This literature review is usually contained in its own chapter, particularly for PhD theses.  In the introduction, just present a brief overview, sufficient to establish the need for your research.
-
-3.       It outlines the purpose and specific objectives of the project.
-
-    These are linked to solving the problem or filling the knowledge gap identified above.
-    Often, the specific objectives are listed in point form. Sometimes a numbered list is used.
-
-4.       It provides a ?road map? for the rest of the report.
-
-    This is so that the reader knows what?s coming and sees the logic of your organization.
-    Describe (in approximately one sentence each) the contents of each of the report/thesis chapters.
-
-What doesn?t go in your Introduction?
-
-    Never put any results or decisions in the Introduction.  Just because you are writing it last doesn?t mean you should give away the story. After all ? it?s called the ?Introduction? for a reason. ;-)
 
 \end{document}
