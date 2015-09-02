@@ -4,7 +4,15 @@
 \chapter{Introduction}
 \section{Project Background}
 \subsection{The Problem}
-In the 1990s, the availability of digital content increased as popularity of the World Wide Web and the internet grew. Academic publishing was not left out of this trend, with long-established journals such as Nature creating websites for all aspects of the pipeline, from submission to publication of papers online\cite{nature-history}. This increase in accessibility, combined with  EIFSDJDSLHGSRLIGH
+In the 1990s, the availability of digital content increased as popularity of the World Wide Web and the internet grew. Academic publishing was not left out of this trend, with long-established journals such as Nature creating websites for all aspects of the pipeline, from submission to publication of papers online\cite{nature-history}. This increase in accessibility has contributed toward an exponential growth of literature\cite{hunter-cohen}, that can make the search for relevant papers challenging. PubMed, a freely-available online database for medical texts, is a mainstay for many users in the health and academic sectors, and is accessed by millions of users daily\cite{dogan}. However, the web interface presents a simplistic approach to information retrieval, with minimal analysis of results and a relatively steep learning curve for achieving satisfactory results with text queries alone. This project aims to enrich and inform the search routine of users by visualising information extracted from the title, abstract, and bibliographic data of the retrieved PubMed citations.
+
+\subsection{Related Work}
+A great deal of work has been carried out on the analysis and optimisation of PubMed as a service. The proposal discussed a small number of web applications that allow users to view citations in different ways, such as through the generation of static graphs with GoPubMed\cite{gopubmed}, or by creating a social network-like web application for authors with Microsoft Academic Search\cite{mas}. Of note, GoPubMed implements a text recognition algorithm in order to extract terms that are known to belong to a specific hierarchical vocabulary, the Gene Ontology. Citations are then associated with these terms, allowing efficient categorisation and therefore retrieval upon the execution of a relevant query. To my knowledge, GoPubMed does not disambiguate terms, which may result in a lower success rate of assigning vocabulary entries to papers.
+
+The key features of this project are the usage and integration of citation retrieval, semantic categorisation and geocoding services, enabling the gap between services currently available online (basic search, some visualisation but little), and those developed by researches/ those working at UMLS, and are not available or even known outside of the academic circles they were created by, to be bridged. The key technologies: MetaThesaurus and MetaMap, will be discussed in brief.??
+
+
+then talk about the main objectives of the project.
 
 A good technical report/thesis Introduction does four things:
 
