@@ -1,0 +1,31 @@
+\documentclass[Report.tex]{subfiles}
+\begin{document}
+
+\chapter{Project Specification}
+External, internal, functional and non-functional requirements are listed in this chapter. 
+
+\section{External requirements}
+\subsection{Functionality}
+The system shall be able to provide the following features to the user:
+\begin{itemize}
+\item Accept a search query from the user in the form of a text string.
+\item Retrieve up to 20 documents from PubMed based on the user's query.
+\item Display geocoded institutional addresses on a map in the browser.
+\item Display concepts related to the documents in the browser.
+\end{itemize}
+
+\subsection{Accessibility}
+In this pilot stage, the application provides minimal accessibility options. 
+\begin{itemize}
+\item Addresses and PubMed records are displayed in English.
+\item Buttons will be available for browser events.
+\end{enumerate}
+
+\subsection{Reliability and Availability}
+Many aspects of this application rely on external services accessed through web APIs (Application Program Interfaces) and are therefore difficult to guarantee availability from. The following measures have been taken to improve reliability:
+\begin{itemize}
+\item Data retrieved from PubMed, combined with concepts from MetaMap analysis and geocoded addresses, will be cached in a MongoDB document store.
+\item BioPython ensures that the maximum number of requests as specified in the Terms and Conditions of using the NCBI E-Utilities\cite{} is not exceeded.
+\end{itemize}
+
+\end{document}
