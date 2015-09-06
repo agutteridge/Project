@@ -1,21 +1,93 @@
+\documentclass[Report.tex]{subfiles}
+\begin{document}
+
 \chapter{Project Overview}
-The key features of the application are introduced in this chapter. The system is described primarily from the perspective of the user, as the back-end processes are focused on in later chapters of this report. 
+\section{External Features}
+The key components of the application are introduced in this chapter. It is first described from the perspective of the user, highlighting key features that are then explained in terms of the back-end processes required to produce them.
 
-\section{Features}
-The web application is a contained within a single page, that is, all POST and GET requests do not result in a redirect, but instead dynamically update to reflect new data. A user will start by entering a text query into the form, and pressing 'search' (Figure \ref{screen1}). 
+\subsection{Functionality}
+The functionality that the application provides to users can be summarised as follows. It can:
+\begin{itemize}
+\item Accept a search query from the user in the form of a text string,
+\item Retrieve up to 20 documents from PubMed based on the user's query,
+\item Display geocoded institutional addresses on a map in the browser, and
+\item Display concepts related to the documents in the browser.
+\end{itemize}
 
-\begin{figure}[!ht]
+\subsection{User Interface}
+The web application is a contained within a single page, that is, all POST and GET requests do not result in a redirect, but instead cause the web page to dynamically update and reflect new data. A user will start by entering a text query into the form, and pressing 'search'. After a duration, the page is updated with the results. Concepts are hierarchically displayed in a visualisation and institutional locations are plotted on a map (Figure \ref{fig:screen1}a). Information from each paper is displayed in a bar above these, allowing the user to cycle through all retrieved papers, also triggering the visualisations to update and emphasise the selected paper (Figure \ref{fig:screen1}b).\newline
+
+\noindent The information bar provides context to the visualisations. Once a paper is selected, the relevant bibliographic information is displayed, the nodes in the concept visualisation are coloured red, and the markers on the Google Map are turned opaque (Figure \ref{fig:screen1}c \& d). Papers be selected from their concept and geographical elements, or from using the Previous/Next buttons. These can also be triggered using the left and right buttons on the keyboard. The title is hyperlinked to the relevant page on PubMed if the user wants to investigate the citation further. 
+
+\begin{figure}[!h]
 \begin{center}
-	\includegraphics[width=0.8\textwidth]{../lib/images/screen1}
-	\caption{Box and Whisker diagrams for 3 formats with balanced hit rates and accuracies. Key values have been added to the diagram to allow clearer comparison, as the y-axis is log10 scale.\label{fig:geoboxes}}
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{../lib/images/screen1}
+		\subcaption{First result from search term 'computer'.}
+	\end{subfigure}\\
+	\par\bigskip
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{../lib/images/screen2}
+		\subcaption{Second result from search term 'computer'.}
+	\end{subfigure}\\
+\end{center}
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth]{../lib/images/screen3}
+		\subcaption{Text detail and hierarchical organisation.}
+	\end{subfigure}%
+	\hfill
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth]{../lib/images/screen4}
+		\subcaption{The map after a marker has been selected.}
+	\end{subfigure}\\
+\caption{Screenshots from the application.}
+\label{fig:screen1}
+\end{figure}\newpage
+
+\section{Architectural features}
+\subsection{Design pattern}
+The application follows the Model-View-Controller (MVC) software architectural pattern, as is currently common with systems that have an emphasis on interactivity via a graphical user interface. MVC has its origins in Smalltalk applications built in the 1980s when the importance of modularisation was recognised. MVC aims to compartmentalise the logic of the application, the user interface, and the data.\newline 
+
+\noindent Figure \ref{fig:mvc} shows how the elements of the project align with MVC. The user interacts with elements of the view, in this case a text input form and a graphical button for submission of input to the application. The view specifies the routes through which the data is sent and displayed, as well as the templates for organisation of page content\cite{mozilla_mvc}. The controller receives the input through the web framework and calls functions within the model that can retrieve relevant data based on the search term. After the data processing is complete, it is sent from the controller to the view to generate output for the user. \newline
+
+\begin{figure}[!h]
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{../lib/images/mvc.png}
+	\caption{Diagram to demonstrate fit of the project with the Model-View-Controller software architecture pattern. The routes and HTML template are listed in the View box and the relevant Python modules are listed in the Controller and Model boxes. Each core interaction between the components of the application are displayed next to the directional arrow. The number of data stores are not representative.}
+\label{fig:mvc}
 \end{center}
 \end{figure}
 
+\noindent The model was focused upon during the development phase of this project, as the efficacy of the view is highly dependent on the quality of the data retrieval and manipulation. 
 
-EVALUATION
-query 'computer' before cache: 
-BEGIN 2015-09-04 21:50:57.860764
-END 2015-09-04 21:55:55.429222
-BEGIN 2015-09-04 21:58:27.498693
-END 2015-09-04 21:58:37.515853
-query 'computer' after cache: 
+\subsection{Application flow}
+One of the main challenges of the project was to integrate the various programming languages and technologies required along the pipeline, that are each suited to their specific task but not immediately compatible with one another. Figure \ref{fig:flow} is a schematic of the key technologies used for each stage. The general flow of the application processes are described below, and details of each component will be explored in Implementation.
+
+\begin{figure}[!h]
+	\includegraphics[width=\textwidth]{../lib/images/flow.png}
+	\caption{Schematic of the key processes of the system, as explained in the text.}
+\label{fig:flow}
+\end{figure}
+
+\begin{enumerate}
+\item{\textbf{Interaction of the user with the browser}} 
+\newline The client side of the web application is presented in a modern browser. A text field is available upon loading of the web page for the user to enter their search term into.
+\item{\textbf{Routing via the Flask web framework}}
+\newline A GET request is issued from a D3 function to the server via the \texttt{/data} route. The pipeline of data retrieval and manipulation is then started.
+\item{\textbf{Retrieving information from papers PubMed}}
+\newline The PubMed IDs (PMID) of up to 20 papers are retrieved from PubMed via a BioPython function\cite{biopython}. First, a MongoDB cache is queried for any documents with the same PMIDs. Otherwise, the entry is fetched from PubMed using the unique PMID as a reference.
+\item{\textbf{Searching the MongoDB cache}}
+\newline The cache was implemented to reduce the overhead of the numerous HTTP requests and thus improve performance. Each document in the cache includes all data as retrieved from PubMed, as well as the MetaMap concepts and Google place IDs found for each paper when initially found and processed.
+\item{\textbf{Extracting medical concepts from papers}}
+\newline The title, MeSH headings, and author keyword fields of PubMed entries are utilised in order to associate useful, semantically categorised terms with each paper. These are submitted to a local version of MetaMap which returns a list of formatted concepts and their Concept Unique Identifiers (CUI).
+\item{\textbf{Organising concepts into a semantic hierarchy}}
+\newline A local copy of the MetaThesaurus set of vocabularies, organised into a database subset compatible with MySQL, is queried for the CUIs as found in the previous step. There is a 1:1 relationship between each CUI and one Semantic Type, which is returned to inform the visualisation of gross hierarchies. To achieve a more granular representation, a direct parent is also retrieved.
+\item{\textbf{Assigning locations to affiliate addresses}}
+\newline Affiliation addresses are formatted to improve success rates, and then sent to the Google Places API to retrieve a result detailing the geographical coordinates of the most likely result. Place IDs are used to fetch coordinates for cached data.
+\item{\textbf{Adding new documents to the cache}}
+\newline PubMed records are inserted into MongoDB, along with a lists of MetaMap concepts and place IDs for fast repeated retrieval.
+\item{\textbf{Data visualisation}}
+\newline Data gained from the distinct sources are combined and formatted into Python dicts to send as JSON-formatted data to the client. The Google Map and D3 canvas are updated to reflect the semantic and geographical information representing the data.
+\end{enumerate}
+
+\end{document}

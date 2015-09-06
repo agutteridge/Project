@@ -2,6 +2,37 @@
 \begin{document}
 
 \chapter{Implementation}
+
+In Chapter 2, the general flow of the processes between the different Python modules was described. Figure \ref{fig:sequence} shows in finer detail the order of the function calls from the \texttt{controller} module. The lifelines in sequence diagrams usually represent the creation and destruction of objects, however Object-Orientated programming was not used in this project. Therefore it can be assumed that the modules are only in use whilst the function calls are being carried out.
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{../lib/images/sequence.png}
+\caption{Schematic of the key processes of the system, as explained in the text.}
+\label{fig:sequence}
+\end{figure}
+
+\subsection{Reliability and Availability}
+Many aspects of this application rely on external services accessed through web APIs (Application Program Interfaces) and are therefore difficult to guarantee. The following measures have been taken to improve reliability:
+\begin{itemize}
+\item Data retrieved from PubMed, combined with concepts from MetaMap analysis and geocoded addresses, will be cached in a MongoDB document store.
+\item BioPython ensures that the maximum number of requests as specified in the Terms and Conditions of using the NCBI E-Utilities\cite{} is not exceeded.
+\item The UMLS MetaThesaurus could have been accessed via a web API, however 
+\end{itemize}
+
+
+EVALUATION
+query 'computer' before cache: 
+BEGIN 2015-09-04 21:50:57.860764
+END 2015-09-04 21:55:55.429222
+BEGIN 2015-09-04 21:58:27.498693
+END 2015-09-04 21:58:37.515853
+query 'computer' after cache: 
+
+As any sentence may generate numerous mappings, MetaMap can require a large amount of computational power and resources\cite{metamap2010}. 
+The web API uses a scheduler which distributes the workload over multiple servers. \cite{metamap2010}
+
+
+
 \section{Python??}
 Explain more about what an SVG is.that can support the use of Scalable Vector Graphics (SVG) that are integral to this D3 application. Examples of this are as Mozilla Firefox 38+, Google Chrome 31+, or Internet Explorer 9+ (although manual scaling is required with the latter (CanIUse.com, \url{http://caniuse.com/#feat=svg})).
 
@@ -10,5 +41,66 @@ Research carried out in the planning stage of the project suggested that users a
 From here, a loading GIF is served to indicate to the user that the app is functional, and that results are incoming. this is important to improve the user's experience, and to prevent confusion at potentially long wait times.
 
 Why metamap or MTI not all papers have MeSH terms or keywords! (can I find out how many, which vocabularies 100 random papers or from a broad topic e.g. biology? I could do a venn diagram for geocode formataddresses and also show how many have keywords/mesh headings
+
+\section{Optimisation}
+\subsection{Geocoding}
+The overhead of geocoding an address for the first time is high; the Text Search service in the Google Places API returns the top ten results that match the input parameters. In order to try and make the results more precise, the 'types' parameter is provided to specify that results should be either a university, a hospital, or an 'establishment' which is set as the default if a type is not present. In order to maximise the number of meaningful results achieved by the API, the input must be optimised to improve the chance that any location is returned (from this point onward referred to as the 'hit rate') and accuracy of the geocoding process. A number of formatting options were empirically tested, enabling an informed decision to be made for the geocoding function in the application.\newline
+
+\noindent In order to have confidence in applying these findings to the larger population of papers available on PubMed, a dataset with papers on a range of topics, from various journals, and originating from numerous countries was required. Statistics on the publishing distribution between countries was found on Medline Trend\cite{medlinetrend}, though the data was limited to a date range of 2008-2012. Table \ref{tab:countries} lists the ten countries with the most papers, their percentage share and the corresponding number of papers used in the dataset. Though the intention was to have the number of addresses reflect these data, each paper in the dataset has multiple affiliation addresses, skewing the distribution. Thus, the primary feature of the dataset is that each of these countries is represented at least once. 33 unique papers and 178 addresses were included to assess the hit rate, and 10 papers and 18 addresses were included to assess the accuracy. Expected locations were found manually using the Google Maps website, and therefore were tested at a smaller scale. The distance between the 'true' location and the geographical coordinates as returned by the Places API could then be compared. A radius of 5 kilometres was chosen as the cut-off distance for a location to be called as accurate. It is important to note that the allocation of correct addresses was somewhat subjective. Automation would have been preferred, however it was not possible to retrieve papers with exclusively the affiliation address in the query. Even if this could have been achieved, universities with campuses distributed over a large area may have produced misleading conclusions.\newpage
+
+\begin{table}
+\begin{center}
+    \begin{tabular}{ | l | c | c | }\hline
+    \textbf{Country} & \textbf{Papers (\%)} & \textbf{Papers in} \\
+     & &\textbf{dataset}\\ \hline
+    USA & 28.1 & 14\\ \hline
+    China & 8.5 & 4\\ \hline
+    United Kingdom & 7.7 & 4\\ \hline
+    Japan & 5.8 & 3\\ \hline
+    Germany & 5.1 & 3\\ \hline
+    Italy & 3.7 & 2\\ \hline
+    Canada & 3.5 & 2\\ \hline
+    France & 3.5 & 2\\ \hline
+    Australia & 2.6 & 1\\ \hline
+    India & 2.6 & 1\\ \hline
+    \end{tabular}
+    \caption{Percentage share of published papers between 2008 and 2012 for the 10 countries with the highest values.\label{tab:countries}}
+\end{center}
+\end{table}
+
+\noindent A number of formatting combinations were tested, as detailed in Figure \ref{fig:geoscatter}. As expected, there was an inverse correlation between the hit rate and the accuracy of geocoding; sending more information (a higher number of address lines, particularly at the start of the address) reduces the chance of a match to a location, however the location is more likely to be correct.\newline
+
+\begin{figure}[!ht]
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{../lib/images/geocode_performance_scatter}
+	\caption{The hit rate (proportion of searches that returned any result, x-axis) and accuracy (proportion of searches that returned a result within 5 km of the expected loaction, y-axis) of 10 formatting options are plotted on this graph. The numbered points represent the following formats: 0 - none, 1 - email addresses removed, 2 - department removed, 3 - first line removed, 4 - department and first line removed, 5 - last 2 lines only, 6 - second and third lines only, 7 - second and last lines only, 8 - last 3 lines only, 9 - first 2 lines removed. Only options 0 and 1 include all addresses, as they are not limited by the number of lines in an address. \label{fig:geoscatter}}
+\end{center}
+\end{figure}
+
+\noindent The first optimisations were carried out after observing trends during development. Email addresses of the lead author are sometimes included at the end of their affiliation address, which appeared to obfuscate the address for the Google Places API. Regular expressions were implemented from the \texttt{re} Python module in order to remove strings that matched the expected pattern for emails. As can be seen in Figure \ref{fig:geoscatter} (points 0 \& 1), removing email addresses did improve the hit rate of geocoding by 1\%. Of 15 addresses that contained email addresses, one (the Chinese Academy of Agricultural Sciences in Beijing) was matched to a location before removal of the email address. After formatting to remove the email address, 3 additional addresses were successfully matched to a location, however the Beijing address could not be matched. By checking the coordinates of the original returned address, it appears that the geocoding algorithm incorporated the email string to match the address to the Natural History Museum in London. In the accuracy dataset, 3 addresses included an email address but the hit rate was zero both before and after removal of the email address. From the incongruous result seen in the hit rate data, a tentative conclusion can be drawn that removing the email address improves the accuracy of results, though by a nominal amount. Spurious data was also seen elsewhere in the dataset, indicating that the input query can only be optimised to a certain degree.
+
+\begin{figure}[!ht]
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{../lib/images/address-lines-histogram}
+	\caption{A histogram of the number of lines found in 178 addresses.\label{fig:addresslines}}
+\end{center}
+\end{figure}
+
+\noindent Removing lines with 'department' or 'dept' was compared to an uninformed removal of the first line, and then the two approaches were combined (Figure \ref{fig:geoscatter}, points 2, 3 \& 4 respectively). Removing the first line gave the best compromise between a reduced hit rate but increased accuracy, so this approach was adopted in later approaches. Sending the last two lines of each address (Figure \ref{fig:geoscatter}, point 5) resulted in a low hit rate and low accuracy results, most likely due to the number of lines averaging around 4 (Figure \ref{fig:addresslines}), resulting in addresses that only specify the region and the country. It was surprising to see that the Places API would not geocode areas such as 'TN, USA', perhaps to focus on matching addresses as the primary use case of the service.\newline
+
+\noindent After taking into account the data in Figure \ref{fig:geoscatter}, it could be seen that there would be a trade-off between hit rate and accuracy. For the three best-performing formats, 'no department', 'no first line' and 'second and third lines' (points 2, 3 \& 6, respectively), the distances were plotted to see the distribution of data (Figure \ref{fig:geoboxes}). With each formatting change from left to right, the dataset is expanded to include outliers of increasing frequency and inaccuracy. For example, the outlier 23 km away occurs in an address with the first line removed because the Places API returns the coordinates for an alternative campus. This type of inaccuracy, though sub-optimal, is permissible for this pilot version of the project. In contrast, an outlier 1336 km away occurs when only the second and third lines are used in one address; this kind of data is highly unrepresentative of the input data. These data informed the decision to format all addresses to exclude the first line and any email addresses.
+
+\begin{figure}[!ht]
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{../lib/images/distance-boxes}
+	\caption{Box and Whisker diagrams for 3 formats with balanced hit rates and accuracies. Key values have been added to the diagram to allow clearer comparison, as the y-axis is log10 scale.\label{fig:geoboxes}}
+\end{center}
+\end{figure}
+
+\subsection{Querying MySQL for concept hierarchies}
+Several 
+
+\subsection{Organising Hierarchical Data}
+
 
 \end{document}
