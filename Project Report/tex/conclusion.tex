@@ -1,0 +1,19 @@
+\subsection{Reliability and Availability}
+Many aspects of this application rely on external services accessed through web APIs (Application Program Interfaces) and are therefore difficult to guarantee. The following measures have been taken to improve reliability:
+\begin{itemize}
+\item Data retrieved from PubMed, combined with concepts from MetaMap analysis and geocoded addresses, will be cached in a MongoDB document store.
+\item BioPython ensures that the maximum number of requests as specified in the Terms and Conditions of using the NCBI E-Utilities\cite{} is not exceeded.
+\item The UMLS MetaThesaurus could have been accessed via a web API, however 
+\end{itemize}
+
+
+EVALUATION
+query 'computer' before cache: 
+BEGIN 2015-09-04 21:50:57.860764
+END 2015-09-04 21:55:55.429222
+BEGIN 2015-09-04 21:58:27.498693
+END 2015-09-04 21:58:37.515853
+query 'computer' after cache: 
+
+As any sentence may generate numerous mappings, MetaMap can require a large amount of computational power and resources\cite{metamap2010}. 
+The web API uses a scheduler which distributes the workload over multiple servers. \cite{metamap2010}

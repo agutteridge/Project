@@ -17,7 +17,7 @@ The functionality that the application provides to users can be summarised as fo
 \subsection{User Interface}
 The web application is a contained within a single page, that is, all POST and GET requests do not result in a redirect, but instead cause the web page to dynamically update and reflect new data. A user will start by entering a text query into the form, and pressing 'search'. After a duration, the page is updated with the results. Concepts are hierarchically displayed in a visualisation and institutional locations are plotted on a map (Figure \ref{fig:screen1}a). Information from each paper is displayed in a bar above these, allowing the user to cycle through all retrieved papers, also triggering the visualisations to update and emphasise the selected paper (Figure \ref{fig:screen1}b).\newline
 
-\noindent The information bar provides context to the visualisations. Once a paper is selected, the relevant bibliographic information is displayed, the nodes in the concept visualisation are coloured red, and the markers on the Google Map are turned opaque (Figure \ref{fig:screen1}c \& d). Papers be selected from their concept and geographical elements, or from using the Previous/Next buttons. These can also be triggered using the left and right buttons on the keyboard. The title is hyperlinked to the relevant page on PubMed if the user wants to investigate the citation further. 
+\noindent The information bar provides context to the visualisations. Once a paper is selected, the relevant bibliographic information is displayed, the nodes in the concept visualisation are coloured red, and the markers on the Google Map are turned opaque (Figure \ref{fig:screen1}c \& d). Papers be selected from their concept and geographical elements, or from using the Previous/Next buttons. These can also be triggered using the left and right buttons on the keyboard. The title is hyperlinked to the relevant page on PubMed if the user wants to investigate the citation further. \newline
 
 \begin{figure}[!h]
 \begin{center}
@@ -79,13 +79,13 @@ One of the main challenges of the project was to integrate the various programmi
 \item{\textbf{Searching the MongoDB cache}}
 \newline The cache was implemented to reduce the overhead of the numerous HTTP requests and thus improve performance. Each document in the cache includes all data as retrieved from PubMed, as well as the MetaMap concepts and Google place IDs found for each paper when initially found and processed.
 \item{\textbf{Extracting medical concepts from papers}}
-\newline The title, MeSH headings, and author keyword fields of PubMed entries are utilised in order to associate useful, semantically categorised terms with each paper. These are submitted to a local version of MetaMap which returns a list of formatted concepts and their Concept Unique Identifiers (CUI).
+\newline The title, MeSH headings, and author keyword fields of PubMed entries are utilised in order to associate useful, semantically categorised terms with each paper. These are submitted to MetaMap/MTI, which returns a list of formatted concepts and their Concept Unique Identifiers (CUI).
 \item{\textbf{Organising concepts into a semantic hierarchy}}
 \newline A local copy of the MetaThesaurus set of vocabularies, organised into a database subset compatible with MySQL, is queried for the CUIs as found in the previous step. There is a 1:1 relationship between each CUI and one Semantic Type, which is returned to inform the visualisation of gross hierarchies. To achieve a more granular representation, a direct parent is also retrieved.
 \item{\textbf{Assigning locations to affiliate addresses}}
 \newline Affiliation addresses are formatted to improve success rates, and then sent to the Google Places API to retrieve a result detailing the geographical coordinates of the most likely result. Place IDs are used to fetch coordinates for cached data.
 \item{\textbf{Adding new documents to the cache}}
-\newline PubMed records are inserted into MongoDB, along with a lists of MetaMap concepts and place IDs for fast repeated retrieval.
+\newline PubMed records are inserted into MongoDB, along with lists of concepts and place IDs for fast repeated retrieval.
 \item{\textbf{Data visualisation}}
 \newline Data gained from the distinct sources are combined and formatted into Python dicts to send as JSON-formatted data to the client. The Google Map and D3 canvas are updated to reflect the semantic and geographical information representing the data.
 \end{enumerate}

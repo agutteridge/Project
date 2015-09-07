@@ -2,8 +2,7 @@
 \begin{document}
 
 \chapter{Implementation}
-
-In Chapter 2, the general flow of the processes between the different Python modules was described. Figure \ref{fig:sequence} shows in finer detail the order of the function calls from the \texttt{controller} module. The lifelines in sequence diagrams usually represent the creation and destruction of objects, however Object-Orientated programming was not used in this project. Therefore it can be assumed that the modules are only in use whilst the function calls are being carried out.
+In Chapter 2, the general flow of the processes between the different Python modules was described. Figure \ref{fig:sequence} shows in finer detail the order of the function calls from the \texttt{controller} module. The lifelines in sequence diagrams usually represent the creation and destruction of objects, however Object-Orientated programming was not used in this project. Therefore it can be assumed that the modules are only in use whilst the function calls are being carried out. In this chapter, the details of each process of the application are discussed to explain the reasoning behind the technologies chosen, and to analyse how well each component functions.
 
 \begin{figure}[h!]
 \includegraphics[width=\textwidth]{../lib/images/sequence.png}
@@ -11,39 +10,65 @@ In Chapter 2, the general flow of the processes between the different Python mod
 \label{fig:sequence}
 \end{figure}
 
-\subsection{Reliability and Availability}
-Many aspects of this application rely on external services accessed through web APIs (Application Program Interfaces) and are therefore difficult to guarantee. The following measures have been taken to improve reliability:
-\begin{itemize}
-\item Data retrieved from PubMed, combined with concepts from MetaMap analysis and geocoded addresses, will be cached in a MongoDB document store.
-\item BioPython ensures that the maximum number of requests as specified in the Terms and Conditions of using the NCBI E-Utilities\cite{} is not exceeded.
-\item The UMLS MetaThesaurus could have been accessed via a web API, however 
-\end{itemize}
+\section{The Python Programming Language}
+\subsection{Language Features}
+Python is a dynamically typed, multi-paradigm language with an extensive package system outside of the standard library that anyone can add to, due to the open source nature of the Python source code\cite{pythonabout}. It was chosen due to its ease of use and applicability for a wide variety of tasks, including HTTP request handling, unit testing and JSON encoding/decoding. Throughout this project, I have found these and modules such as \texttt{subprocess} for spawning a MetaMap process, and external libraries such as BioPython for submitting Entrez requests, extremely useful for the tasks at hand. The usage of BioPython was not strictly necessary, as the E-Utils are accessible via simple HTTP requests. However, BioPython automates many of the finer tunings, ensuring that the query rate is not greater than 3 per second (source code available at \url{https://github.com/biopython/biopython/blob/master/Bio/Entrez/} and documentation at \url{http://biopython.org/DIST/docs/api/}). This is the greatest strength of Python - if a tool has not already been made by the active community of developers, it is possible, and encouraged, for one to build a new library themselves. \newline
 
+\subsection{Project Structure}
+\noindent That Python programs do not explicitly require a structure is one of its strengths - but also a potential downfall for inexperienced developers. Modules can be organised into packages with the inclusion of a \texttt{\_\_init\_\_.py} file, but even this is optional. It was difficult to know how to structure the application, particularly with the usage of the Flask microframework. However with the popularity of MVC-like frameworks such as Django and Ruby on Rails it was not difficult to find comparable projects to base the directory structure of the application on. It is also largely down to the personal preference of the developer, and does not impact the performance of the application at all. Within modules, there is a choice to be made between keeping the module as a collection as functions, or turning it into a Class to utilise object-orientated programming principles and patterns. In a language such as Java or Ruby, I most likely would have created a Citation class with attributes for important fields such as PMIDs, and written getters for each. In Python, this style of programming is possible but perhaps overwrought considering the ease with which Python handles JSON objects and decodes them into dicts. Each PubMed entry has a large number of fields, so would have required complicated objects (with a number of fields set to null, as few elements are mandatory) to fully represent all citation types. Citation objects were left as JSON objects/Python dicts to decrease the overhead of object creation, and also to simplify the passing of messages between modules, at the cost of a better defined structure. 
 
-EVALUATION
-query 'computer' before cache: 
-BEGIN 2015-09-04 21:50:57.860764
-END 2015-09-04 21:55:55.429222
-BEGIN 2015-09-04 21:58:27.498693
-END 2015-09-04 21:58:37.515853
-query 'computer' after cache: 
+\subsection{The Flask Microframework}
+ Flask is extremely lightweight, requiring minimal input to produce a basic server that can route requests from the client. This was perfect for the simplicity of the application, that currently does not require user or admin accounts and the associated security risks and storage implications. Though a cache was eventually implemented, this is external to the core of the framework as all input comes from the backend. 
 
-As any sentence may generate numerous mappings, MetaMap can require a large amount of computational power and resources\cite{metamap2010}. 
-The web API uses a scheduler which distributes the workload over multiple servers. \cite{metamap2010}
+\section{Searching For Concepts Using MetaMap}
+Due to the problems of Word-Sense Disambiguation in natural language processing, it was assumed that directly searching the UMLS for concepts would not have a high success rate. For example, a title such as \emph{"Loss of SMAD4 Promotes Colorectal Cancer Progression by Accumulation of Myeloid-Derived Suppressor Cells through CCL15-CCR1 Chemokine Axis"} contains composite phrases e.g. "cancer progression" that confer additional information together as opposed to when processed separately. This semantic analysis is would be challenging to implement manually and would most likely result in inaccuracies. \newline
 
+\noindent MetaMap can be invoked either locally or via the Semantic Knowledge Representation Web API within the MTI. Both options were tested to compare performance. The MTI results are more refined (see Table \ref{tab:mm-results}), and consequently produce concept visualisations that are easier to understand (Figure \ref{fig:mm-screen}). Compared to the visualisation in Figure \ref{fig:screen1} produced using the MTI, there are more nodes, and many co-occur in the same hierarchies, suggesting some data redundancy. In Table \ref{tab:mm-results} it can be seen that MetaMap alone produced a higher number of results, some of which were inaccurate. For example, the phrase \emph{"Chemokine Axis"} appears to have been incorrectly interpreted by MetaMap to consist of two separate terms, hence the return of the concept \emph{"Axis vertebra"} (MetaMap, concept 3). For these reasons, the MTI was determined to be a better fit for this project. However the performance difference is not trivial. On a standard broadband connection, the full MTI process takes around 5-10 minutes. This is in contrast to running MetaMap locally, the output of which is delivered after less than a minute. It was decided to keep both options in the source code as \texttt{metamap.run} and \texttt{metamap.run_local}, respectively.
 
+\begin{table}[!h]
+\begin{center}
+    \begin{tabular}{ | c | l | l | }\hline
+    \textbf{\#} & \textbf{MTI concepts} & \textbf{MetaMap concepts}\\ \hline
+1 & CCL15 protein, human & Axis\\ \hline
+2 & \*Macrophage Inflammatory Proteins & Axis vertebra\\ \hline
+3 & \*Chemokines, CC & chemokine\\ \hline
+4 & \*Chemokines & Disease Progression\\ \hline
+5 & \*Colorectal Cancer & CCL15 protein, human\\ \hline
+6 & \*Disease Progression & Genus Axis\\ \hline
+7 & \*Neoplastic Processes & Promotion (action)\\ \hline
+8 & \*Neoplasms & Loss\\ \hline
+9 & Receptors, CCR1 & Progression\\ \hline
+10 & \*Antigen Presentation & CCL15 gene\\ \hline
+11 & immunology & CCR1 gene\\ \hline
+12 & - & Chemokine (C-C Motif) Receptor 1\\ \hline
+13 & - & SMAD4 gene\\ \hline
+14 & - & Cancer Genus\\ \hline
+15 & - & Cells\\ \hline
+16 & - & Cells [Chemical/Ingredient]\\ \hline
+17 & - & Colorectal\\ \hline
+18 & - & Derivation\\ \hline
+19 & - & Derived value\\ \hline
+20 & - & Malignant Neoplasms\\ \hline
+21 & - & Myeloid\\ \hline
+22 & - & Primary malignant neoplasm\\ \hline
+23 & - & Suppressor\\ \hline
+24 & - & Suppressor Device Component\\ \hline
+    \end{tabular}
+    \caption{Output from MetaMap and MTI for the title \emph{"Loss of SMAD4 Promotes Colorectal Cancer Progression by Accumulation of Myeloid-Derived Suppressor Cells through CCL15-CCR1 Chemokine Axis"}.}
+\label{tab:mm-results}
+\end{center}
+\end{table}
 
-\section{Python??}
-Explain more about what an SVG is.that can support the use of Scalable Vector Graphics (SVG) that are integral to this D3 application. Examples of this are as Mozilla Firefox 38+, Google Chrome 31+, or Internet Explorer 9+ (although manual scaling is required with the latter (CanIUse.com, \url{http://caniuse.com/#feat=svg})).
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{../lib/images/mm-screen.png}
+\caption{The concept visualisation from the search term 'computer' using local MetaMap.}
+\label{fig:mm-screen}
+\end{center}
+\end{figure}
 
-Research carried out in the planning stage of the project suggested that users are often looking for a paper they are already familiar with, and so another field is available for searching the author fields only. Increasing the specificity of this query with a simple interface allows the user to take full advantage of the additional functionality, whilst the search string is converted to an 'advanced' query server-side.
-
-From here, a loading GIF is served to indicate to the user that the app is functional, and that results are incoming. this is important to improve the user's experience, and to prevent confusion at potentially long wait times.
-
-Why metamap or MTI not all papers have MeSH terms or keywords! (can I find out how many, which vocabularies 100 random papers or from a broad topic e.g. biology? I could do a venn diagram for geocode formataddresses and also show how many have keywords/mesh headings
-
-\section{Optimisation}
-\subsection{Geocoding}
+\section{Geocoding}
+\subsection{Optimisation}
 The overhead of geocoding an address for the first time is high; the Text Search service in the Google Places API returns the top ten results that match the input parameters. In order to try and make the results more precise, the 'types' parameter is provided to specify that results should be either a university, a hospital, or an 'establishment' which is set as the default if a type is not present. In order to maximise the number of meaningful results achieved by the API, the input must be optimised to improve the chance that any location is returned (from this point onward referred to as the 'hit rate') and accuracy of the geocoding process. A number of formatting options were empirically tested, enabling an informed decision to be made for the geocoding function in the application.\newline
 
 \noindent In order to have confidence in applying these findings to the larger population of papers available on PubMed, a dataset with papers on a range of topics, from various journals, and originating from numerous countries was required. Statistics on the publishing distribution between countries was found on Medline Trend\cite{medlinetrend}, though the data was limited to a date range of 2008-2012. Table \ref{tab:countries} lists the ten countries with the most papers, their percentage share and the corresponding number of papers used in the dataset. Though the intention was to have the number of addresses reflect these data, each paper in the dataset has multiple affiliation addresses, skewing the distribution. Thus, the primary feature of the dataset is that each of these countries is represented at least once. 33 unique papers and 178 addresses were included to assess the hit rate, and 10 papers and 18 addresses were included to assess the accuracy. Expected locations were found manually using the Google Maps website, and therefore were tested at a smaller scale. The distance between the 'true' location and the geographical coordinates as returned by the Places API could then be compared. A radius of 5 kilometres was chosen as the cut-off distance for a location to be called as accurate. It is important to note that the allocation of correct addresses was somewhat subjective. Automation would have been preferred, however it was not possible to retrieve papers with exclusively the affiliation address in the query. Even if this could have been achieved, universities with campuses distributed over a large area may have produced misleading conclusions.\newpage
@@ -97,10 +122,21 @@ The overhead of geocoding an address for the first time is high; the Text Search
 \end{center}
 \end{figure}
 
+\subsection{Extracting UMLS Concepts}
+Why metamap or MTI not all papers have MeSH terms or keywords! (can I find out how many, which vocabularies 100 random papers or from a broad topic e.g. biology? I could do a venn diagram for geocode formataddresses and also show how many have keywords/mesh headings
+
 \subsection{Querying MySQL for concept hierarchies}
 Several 
 
 \subsection{Organising Hierarchical Data}
+maybe some optimisation here but probably not enough time
+
+\subsection{Displaying data in the browser}
+Explain more about what an SVG is.that can support the use of Scalable Vector Graphics (SVG) that are integral to this D3 application. Examples of this are as Mozilla Firefox 38+, Google Chrome 31+, or Internet Explorer 9+ (although manual scaling is required with the latter (CanIUse.com, \url{http://caniuse.com/#feat=svg})).
+
+Research carried out in the planning stage of the project suggested that users are often looking for a paper they are already familiar with, and so another field is available for searching the author fields only. Increasing the specificity of this query with a simple interface allows the user to take full advantage of the additional functionality, whilst the search string is converted to an 'advanced' query server-side.
+
+From here, a loading GIF is served to indicate to the user that the app is functional, and that results are incoming. this is important to improve the user's experience, and to prevent confusion at potentially long wait times.
 
 
 \end{document}
