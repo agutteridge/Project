@@ -5,14 +5,14 @@
 In Chapter 2, the general flow of the processes between the different Python modules was described. Figure \ref{fig:sequence} shows in finer detail the order of the function calls from the \texttt{controller} module. The lifelines in sequence diagrams usually represent the creation and destruction of objects, however Object-Orientated programming was not used in this project. Therefore it can be assumed that the modules are only in use whilst the function calls are being carried out. In this chapter, the details of each process of the application are discussed to explain the reasoning behind the technologies chosen, and to analyse how well each component functions.
 
 \begin{figure}[h!]
-\includegraphics[width=\textwidth]{../lib/images/sequence.png}
+\includegraphics[width=0.9\textwidth]{../lib/images/sequence.png}
 \caption{Schematic of the key processes of the system, as explained in the text.}
 \label{fig:sequence}
 \end{figure}
 
 \section{The Python Programming Language}
 \subsection{Language Features}
-Python is a dynamically typed, multi-paradigm language with an extensive package system outside of the standard library that anyone can add to, due to the open source nature of the Python source code\cite{pythonabout}. It was chosen due to its ease of use and applicability for a wide variety of tasks, including HTTP request handling, unit testing and JSON encoding/decoding. Throughout this project, I have found these and modules such as \texttt{subprocess} for spawning a MetaMap process, and external libraries such as BioPython for submitting Entrez requests, extremely useful for the tasks at hand. The usage of BioPython was not strictly necessary, as the E-Utils are accessible via simple HTTP requests. However, BioPython automates many of the finer tunings, ensuring that the query rate is not greater than 3 per second (source code available at \url{https://github.com/biopython/biopython/blob/master/Bio/Entrez/} and documentation at \url{http://biopython.org/DIST/docs/api/}). This is the greatest strength of Python - if a tool has not already been made by the active community of developers, it is possible, and encouraged, for one to build a new library themselves. \newline
+Python is a dynamically typed, multi-paradigm language with an extensive package system outside of the standard library that anyone can add to, due to the open source nature of the Python source code\cite{pythonabout}. It was chosen due to its ease of use and applicability for a wide variety of tasks, including HTTP request handling, unit testing and JSON encoding/decoding. Throughout this project, I have found these and modules such as \texttt{subprocess} for spawning a MetaMap process, and external libraries such as BioPython for submitting Entrez requests, extremely useful for the tasks at hand. The usage of BioPython was not strictly necessary, as the E-Utils are accessible via simple HTTP requests. However, BioPython automates many of the finer tunings, ensuring that the query rate is not greater than 3 per second (source code available at \url{https://github.com/biopython/biopython/blob/master/Bio/Entrez/} and documentation at \url{http://biopython.org/DIST/docs/api/}). This is the greatest strength of Python - if a tool has not already been made by the active community of developers, it is possible, and encouraged, for one to build a new library themselves.
 
 \subsection{Project Structure}
 \noindent That Python programs do not explicitly require a structure is one of its strengths - but also a potential downfall for inexperienced developers. Modules can be organised into packages with the inclusion of a \texttt{\_\_init\_\_.py} file, but even this is optional. It was difficult to know how to structure the application, particularly with the usage of the Flask microframework. However with the popularity of MVC-like frameworks such as Django and Ruby on Rails it was not difficult to find comparable projects to base the directory structure of the application on. It is also largely down to the personal preference of the developer, and does not impact the performance of the application at all. Within modules, there is a choice to be made between keeping the module as a collection as functions, or turning it into a Class to utilise object-orientated programming principles and patterns. In a language such as Java or Ruby, I most likely would have created a Citation class with attributes for important fields such as PMIDs, and written getters for each. In Python, this style of programming is possible but perhaps overwrought considering the ease with which Python handles JSON objects and decodes them into dicts. Each PubMed entry has a large number of fields, so would have required complicated objects (with a number of fields set to null, as few elements are mandatory) to fully represent all citation types. Citation objects were left as JSON objects/Python dicts to decrease the overhead of object creation, and also to simplify the passing of messages between modules, at the cost of a better defined structure. 
@@ -21,9 +21,11 @@ Python is a dynamically typed, multi-paradigm language with an extensive package
  Flask is extremely lightweight, requiring minimal input to produce a basic server that can route requests from the client. This was perfect for the simplicity of the application, that currently does not require user or admin accounts and the associated security risks and storage implications. Though a cache was eventually implemented, this is external to the core of the framework as all input comes from the backend. 
 
 \section{Searching For Concepts Using MetaMap}
-Due to the problems of Word-Sense Disambiguation in natural language processing, it was assumed that directly searching the UMLS for concepts would not have a high success rate. For example, a title such as \emph{"Loss of SMAD4 Promotes Colorectal Cancer Progression by Accumulation of Myeloid-Derived Suppressor Cells through CCL15-CCR1 Chemokine Axis"} contains composite phrases e.g. "cancer progression" that confer additional information together as opposed to when processed separately. This semantic analysis is would be challenging to implement manually and would most likely result in inaccuracies. \newline
+\subsection{The Utility of MetaMap}
+Due to the problems of Word-Sense Disambiguation in natural language processing, it was assumed that directly searching the UMLS for concepts would not have a high success rate. For example, a title such as \emph{"Loss of SMAD4 Promotes Colorectal Cancer Progression by Accumulation of Myeloid-Derived Suppressor Cells through CCL15-CCR1 Chemokine Axis"} contains composite phrases e.g. "cancer progression" that confer additional information together as opposed to when processed separately. This semantic analysis is would be challenging to implement manually and would most likely result in inaccuracies.
 
-\noindent MetaMap can be invoked either locally or via the Semantic Knowledge Representation Web API within the MTI. Both options were tested to compare performance. The MTI results are more refined (see Table \ref{tab:mm-results}), and consequently produce concept visualisations that are easier to understand (Figure \ref{fig:mm-screen}). Compared to the visualisation in Figure \ref{fig:screen1} produced using the MTI, there are more nodes, and many co-occur in the same hierarchies, suggesting some data redundancy. In Table \ref{tab:mm-results} it can be seen that MetaMap alone produced a higher number of results, some of which were inaccurate. For example, the phrase \emph{"Chemokine Axis"} appears to have been incorrectly interpreted by MetaMap to consist of two separate terms, hence the return of the concept \emph{"Axis vertebra"} (MetaMap, concept 3). For these reasons, the MTI was determined to be a better fit for this project. However the performance difference is not trivial. On a standard broadband connection, the full MTI process takes around 5-10 minutes. This is in contrast to running MetaMap locally, the output of which is delivered after less than a minute. It was decided to keep both options in the source code as \texttt{metamap.run} and \texttt{metamap.run_local}, respectively.
+\subsection{MetaMap vs. The MTI}
+\noindent MetaMap can be invoked either locally or via the Semantic Knowledge Representation Web API within the MTI. Both options were tested to compare performance. The MTI results are more refined (see Table \ref{tab:mm-results}), and consequently produce concept visualisations that are easier to understand (Figure \ref{fig:mm-screen}). Compared to the visualisation in Figure \ref{fig:screen1} produced using the MTI, there are more nodes, and many co-occur in the same hierarchies, suggesting some data redundancy. In Table \ref{tab:mm-results} it can be seen that MetaMap alone produced a higher number of results, some of which were inaccurate. For example, the phrase \emph{"Chemokine Axis"} appears to have been incorrectly interpreted by MetaMap to consist of two separate terms, hence the return of the concept \emph{"Axis vertebra"} (MetaMap, concept 3). For these reasons, the MTI was determined to be a better fit for this project. However the performance difference is not trivial. On a standard broadband connection, the full MTI process takes around 5-10 minutes. This is in contrast to running MetaMap locally, the output of which is delivered after less than a minute. It was decided to keep both options in the source code as \texttt{metamap.run} and \texttt{metamap.run\_local}, respectively. Both methods use the \texttt{subprocess} Python module and return results in almost identical formats, so switching between the two is reflected in the concepts only.\newline
 
 \begin{table}[!h]
 \begin{center}
@@ -53,17 +55,33 @@ Due to the problems of Word-Sense Disambiguation in natural language processing,
 22 & - & Primary malignant neoplasm\\ \hline
 23 & - & Suppressor\\ \hline
 24 & - & Suppressor Device Component\\ \hline
-    \end{tabular}
+    \end{tabular}\\
     \caption{Output from MetaMap and MTI for the title \emph{"Loss of SMAD4 Promotes Colorectal Cancer Progression by Accumulation of Myeloid-Derived Suppressor Cells through CCL15-CCR1 Chemokine Axis"}.}
 \label{tab:mm-results}
 \end{center}
 \end{table}
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=0.4\textwidth]{../lib/images/mm-screen.png}
+\caption{The concept visualisation from the search term 'computer' using local MetaMap.}
+\label{fig:mm-screen}
+\end{center}
+\end{figure}\newpage
+
+\section{Organising Concepts Into Hierarchies Using The MetaThesaurus}
+\subsection{MetaThesaurus Setup}
+The MetaThesaurus is free to download from the NIH (available from \url{http://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html}) with a valid UMLS Terminology Services account. The NIH provides database subsets for Microsoft Access, Oracle or MySQL Relational Database Management Systems. MySQL was chosen to the proprietary nature of Access and Oracle. During installation, 70 vocabularies were chosen for inclusion based on the MetaThesaurus defaults and the language specified, which was restricted to English. These are listed in Appendix B, Table \ref{tab:vocabs}. 
+
+\subsection{Querying MySQL}
+An external library, PyMySQL, was used to execute SQL queries from the \texttt{umls} module. A summary of the database schema is shown in Figure \ref{fig:db}, showing only the attributes and tables necessary for the query. The query (Appendix A, page ???) receives a list of CUIs as input and returns the Semantic Type (from \texttt{MRSTY} as well as any direct parents. Direct parent concepts have a \texttt{MRREL.RELA} of 'inverse\_isa'. This relationship was chosen due to its explicit mapping of a parent/child hierarchy, and as a result of investigating similar options \texttt{MRREL.REL} = 'RB' (broader relationship) and \texttt{MRREL.REL} = 'PAR' (parent) that returned results that were not true 'isa' relationships. Not all concepts have an 'inverse\_isa' relationship, and therefore outer joins were implemented to allow null values as a result.\newline
+
+\noindent Each concept is represented in multiple vocabularies, each with their own string. To standardise the nomenclature used as much as possible, only the name from highest ranked source for each CUI is used. Rankings are defined in \texttt{MRRANK}, and the default rankings were used. The top ranking is 313, held by the MetaThesaurus preferred names (\texttt{SAB} = 'MTH', \texttt{TTY} = 'PN'). It was discovered that there are 2,295,761 CUIs in the database, of which only 172,139 have a MTH/PN source. For this reason, it was decided not to restrict just to the top ranking vocabulary as this would exclude a large proportion of the dataset. Semantic Type tree numbers (\texttt{MRSTR.STN}) were also ranked to produce the node furthest up the hierarchy.
 
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[width=0.6\textwidth]{../lib/images/mm-screen.png}
-\caption{The concept visualisation from the search term 'computer' using local MetaMap.}
-\label{fig:mm-screen}
+\includegraphics[width=0.7\textwidth]{../lib/images/db.png}
+\caption{Attributes and tables used in the SQL query to retrieve concepts, their direct parents, and their semantic types.}
+\label{fig:db}
 \end{center}
 \end{figure}
 
@@ -121,15 +139,6 @@ The overhead of geocoding an address for the first time is high; the Text Search
 	\caption{Box and Whisker diagrams for 3 formats with balanced hit rates and accuracies. Key values have been added to the diagram to allow clearer comparison, as the y-axis is log10 scale.\label{fig:geoboxes}}
 \end{center}
 \end{figure}
-
-\subsection{Extracting UMLS Concepts}
-Why metamap or MTI not all papers have MeSH terms or keywords! (can I find out how many, which vocabularies 100 random papers or from a broad topic e.g. biology? I could do a venn diagram for geocode formataddresses and also show how many have keywords/mesh headings
-
-\subsection{Querying MySQL for concept hierarchies}
-Several 
-
-\subsection{Organising Hierarchical Data}
-maybe some optimisation here but probably not enough time
 
 \subsection{Displaying data in the browser}
 Explain more about what an SVG is.that can support the use of Scalable Vector Graphics (SVG) that are integral to this D3 application. Examples of this are as Mozilla Firefox 38+, Google Chrome 31+, or Internet Explorer 9+ (although manual scaling is required with the latter (CanIUse.com, \url{http://caniuse.com/#feat=svg})).
