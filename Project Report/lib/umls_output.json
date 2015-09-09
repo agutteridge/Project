@@ -1,0 +1,114 @@
+{
+  "name": "flare",
+  "children": [
+    {
+      "name": "Mental Process",
+      "children": [
+        {
+          "name": "",
+          "children": [
+            {
+              "name": "Attitude of Health Personnel",
+              "PMIDs": [
+                "24804813"
+              ]
+            },
+            {
+              "name": "Attitude to Computers",
+              "PMIDs": [
+                "24804813"
+              ]
+            },
+            {
+              "name": "Computer Literacy",
+              "PMIDs": [
+                "24804813"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Manufactured Object",
+      "children": [
+        {
+          "name": "Manufactured Object",
+          "children": [
+            {
+              "name": "Computers",
+              "PMIDs": [
+                "24804813"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "",
+          "children": [
+            {
+              "name": "Hospitals, University",
+              "PMIDs": [
+                "24804813"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Individual concepts",
+      "children": [
+        {
+          "name": "Clinical Study by Design",
+          "children": [
+            {
+              "name": "Cross-Sectional Studies",
+              "PMIDs": [
+                "24804813"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Surveys",
+          "children": [
+            {
+              "name": "Questionnaires",
+              "PMIDs": [
+                "24804813"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Professional or Occupational Group",
+      "children": [
+        {
+          "name": "Medical Occupation",
+          "children": [
+            {
+              "name": "Nurse",
+              "PMIDs": [
+                "24804813"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "",
+          "children": [
+            {
+              "name": "Nursing Staff, Hospital",
+              "PMIDs": [
+                "24804813"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
