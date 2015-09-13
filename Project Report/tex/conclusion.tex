@@ -1,19 +1,15 @@
-\subsection{Reliability and Availability}
-Many aspects of this application rely on external services accessed through web APIs (Application Program Interfaces) and are therefore difficult to guarantee. The following measures have been taken to improve reliability:
-\begin{itemize}
-\item Data retrieved from PubMed, combined with concepts from MetaMap analysis and geocoded addresses, will be cached in a MongoDB document store.
-\item BioPython ensures that the maximum number of requests as specified in the Terms and Conditions of using the NCBI E-Utilities\cite{} is not exceeded.
-\item The UMLS MetaThesaurus could have been accessed via a web API, however 
-\end{itemize}
+\documentclass[Report.tex]{subfiles}
+\begin{document}
 
+\chapter{Conclusion}
+\section{Summary}
+By utilising a combination of natural language processing technologies and pre-defined hierarchical vocabularies, this project aimed to visualise information found in biomedical citations that is otherwise presented as text. Without the appropriate analyses, these data are computationally unrelated to real-world structures, despite being intrinsically based upon tangible people (authors), geographical locations (institutions) and topics of interest. MetaMap, as part of the Medical Text Indexer, is used to discover concepts present in the citation, that are then contextualised within the Unified Medical Language System by searching the MetaThesaurus for parent concepts higher up in the tree hierarchy. A graphical representation of concepts is paired with a geographical map of the institutions that the authors are affiliated with, with the intention of facilitating a more immediate understanding of the information associated with the citation.\newline
 
-EVALUATION
-query 'computer' before cache: 
-BEGIN 2015-09-04 21:50:57.860764
-END 2015-09-04 21:55:55.429222
-BEGIN 2015-09-04 21:58:27.498693
-END 2015-09-04 21:58:37.515853
-query 'computer' after cache: 
+\noindent These components together comprise the application, allowing a user to interact with a client interface in a web browser, conduct a PubMed search on their chosen query term and then view the concepts and institutions associated with the results displayed using modern JavaScript libraries. Server-side, a combination of data retrieval using HTTP requests, SQL queries and direct activation of local processes is required to achieve these data from various sources, the future performance of which is enhanced by caching results in a document store.
 
-As any sentence may generate numerous mappings, MetaMap can require a large amount of computational power and resources\cite{metamap2010}. 
-The web API uses a scheduler which distributes the workload over multiple servers. \cite{metamap2010}
+\section{Final Thoughts}
+Since the outset, this project has had an open-ended structure, as so much of the functionality is dependent upon the data retrieved from numerous external sources. I think that overall the project has achieved its goal in allowing users to explore citations in a more detailed and visual way, as opposed to the default PubMed user interface. Throughout the course of this project I have picked up many new skills for both front- and back-end web development. However, I do think this had an impact on my productivity, so it is likely that I could have achieved more in the same timeframe with familiar technologies. Despite this, it was quick and straightforward to build a web application in Python using the Flask framework, and there were many D3 examples available to learn from. Both of these libraries were well documented, which made it easier to understand and integrate them into my project. On the other hand, documentation from the NIH was fairly piecemeal and difficult to find, which highlighted the importance of detailed documentation for APIs and libraries.\newline
+
+\noindent Going forward, the accuracy of the geocoding process could be improved by pinpointing key elements of the string that would be best for address recognition, such as street names, postcodes or institution names, regardless of the end geocoding service used. I am happy with the implementation of MetaMap, the MTI and the MetaThesaurus, though the current technology is too demanding for deployment to a cheap server. The user interface could have had better interactivity with a more in-depth understanding of D3. All in all, I am pleased that I challenged myself by utilising new technologies, and that I was also able to use skills gained on the MSc such as SQL querying, imperative programming, and general good practice programming such as unit testing.
+
+\end{document}

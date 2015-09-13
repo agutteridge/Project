@@ -26,6 +26,9 @@
 \usepackage{textcomp}
 \usepackage{fixltx2e}
 \usepackage{longtable}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
 
 % formatting of code snippets
 \usepackage{listings}
@@ -84,28 +87,26 @@
 
 \begin{document}
 
-%\subfile{title}
-%\subfile{abstract}
+\subfile{title}
+\subfile{abstract}
 
-\newgeometry{margin=2.54cm, top=0cm}
+%\newgeometry{margin=2.54cm, top=0cm}
 \tableofcontents
-\restoregeometry
+%\restoregeometry
 
 \newgeometry{margin=2.54cm}
 \subfile{report_intro}
 \subfile{overview}
 \subfile{impl}
 \subfile{testopt}
-%\subfile{objectives}
-%\subfile{conclusion}
-\subfile{glossary}
-\subfile{appendix}
+\subfile{eval}
+\subfile{conclusion}
 \restoregeometry
 
-\newgeometry{margin=2.54cm, top=0cm}
 \raggedright
 \nocite{*}
 \printbibliography[heading=bibintoc]
-\restoregeometry
+
+\subfile{appendix}
 
 \end{document}

@@ -1,4 +1,61 @@
-GEOCODING
-Had there been more time, could have tried more combinations
-Had flags - multiple attempts for each address
-Different rules depending on # of lines
+\documentclass[Report.tex]{subfiles}
+\begin{document}
+\chapter{Evaluation}
+The technical aspects of the application will be critically analysed in this chapter, followed by a more general discussion of how well the system operates, with particular attention to components that would benefit with more work.
+ 
+\section{Reliability and Availability}
+Many of the components rely on external services accessed through web APIs and are therefore difficult to guarantee. The following measures have been taken to improve reliability:
+\begin{itemize}
+\item Data retrieved from PubMed, combined with concepts from MTI analysis and geocoded addresses, are cached in a MongoDB document store.
+\item BioPython ensures that the maximum number of requests as specified in the Terms and Conditions of using the NCBI E-Utilities \cite{eutils} is not exceeded. This prevents my account from being denied access to the service, which could last several days. 
+\item The UMLS MetaThesaurus could have been accessed via a web API. Instead, the database subset was downloaded and is accessed from a MySQL server. This needs to be started prior to running the application. 
+\item Both local MetaMap and remote MTI services can be used in this application, the merits of each were outlined in the previous chapter. The MetaMap server must be started before running the application, whereas the MTI is available around the clock, though there is little control over the latter in the event of downtime.
+\item The daily request quota for the Google Places Web API is 150,000. Text Search requests return a maximum of 10 results, potentially applying a multiplier of 10 to the number of requests made. This usage is greatly reduced when place IDs are cached after initial retrieval and processing of a citation, as retrieving the details of a place ID requires only one request. This means it is unlikely for the quota to be exceeded unless a large number of search terms with non-overlapping results are used. In this eventuality, it was ensured that the application would still visualise the concepts without any markers placed on the map.
+\end{itemize}
+
+\section{Speed}
+The time taken between the user submitting a search term and the sending of results from the server to the client-side browser is highly variable. Citations retrieved from PubMed vary greatly in terms of the number of authors and author affiliations, the length of the abstract, and the number of keywords supplied. Additionally, a large number of services are being used to generate data and these may be dependent on the server's connection to the internet. A few examples of the timings to be expected from the application are presented in Table \ref{tab:times}.\newpage
+
+\begin{table}[!ht]
+\begin{center}
+    \begin{tabular}{ | l | C{2.2cm} | C{2.2cm} | C{2.2cm} | C{2.2cm} | }\hline
+    \textbf{Component} & \textbf{MetaMap, not cached} & \textbf{MetaMap, cached} & 
+    \textbf{MTI, not cached} & \textbf{MTI, cached}\\ \hline
+Whole application & 44,729 & 12,018 & 71,673 & 9,003\\ \hline
+Searching cache & 11 & 13 & 9 & 11\\ \hline
+Finding concepts & 11,015 & 0 & 37,670 & 0\\ \hline
+Concept hierarchies & 1,844 & 1,582 & 485 & 511\\ \hline
+Geocoding & 29,210 & 0 & 30,072 & 0\\ \hline
+Places from IDs & 0 & 8,687 & 0 & 7,748\\ \hline
+Inserting into cache & 18 & 0 & 13 & 0\\ \hline
+    \end{tabular}\\
+    \caption{Duration of the execution of application components. All values are in milliseconds. The search term 'computer' was used for all tests, resulting in 20 citations with 27 addresses, 873 concepts from MetaMap or 290 concepts with the MTI between them.}
+\label{tab:times}
+\end{center}
+\end{table}
+
+\noindent The above table shows that finding concepts through MetaMap or the MTI, and geocoding, are the most time-intensive processes. The time it takes to obtain coordinates for locations is reduced by approximately two thirds after caching, and the MetaMap/MTI services can be bypassed entirely. Though the MTI takes 1.6-fold longer to generate concepts than MetaMap alone, the clearer visualisation as shown in the previous chapter is more appropriate for the application.\newline
+
+\noindent After realising that the application takes a fairly long time to complete its numerous tasks, parallelisation of the application was attempted. Most of the modules' function calls do not share variables and are therefore independent of one another. Additionally, when the Google Places API and the MTI are being called, the program is idle when it could be utilised for other processes. A thread pool starts in \texttt{controller}, spawning \texttt{metamap}, \texttt{geocode} and \texttt{umls} function calls to run their respective external services. This interleaving of processes produces the timings in Table \ref{tab:parallel}. It can be seen that the difference in delay  between using the MTI and MetaMap disappears and is in fact reversed to a small extent, most likely due to the higher number of concepts returned by MetaMap that then require a larger SQL query for the MetaThesaurus.\newline
+
+\begin{table}[!ht]
+\begin{center}
+    \begin{tabular}{ | C{2.2cm} | C{2.2cm} | C{2.2cm} | C{2.2cm} | }\hline
+    \textbf{MetaMap, not cached} & \textbf{MetaMap, cached} & 
+    \textbf{MTI, not cached} & \textbf{MTI, cached}\\ \hline
+43,946 & 10,854 & 41,351 & 11,538 \\ \hline
+    \end{tabular}\\
+    \caption{Duration of the execution of the whole application when calls to external services are parallelised. All values are in milliseconds. The search term 'computer' was used for all tests, resulting in 20 citations with 27 addresses, 873 concepts from MetaMap or 290 concepts with the MTI between them.}
+\label{tab:parallel}
+\end{center}
+\end{table}
+\newpage
+
+\section{Functionality}
+\subsection{User Interface}
+Anecdotally, I believe that the application works well as a whole. Given more time, I would have liked to have made interaction with the data more malleable and dynamic for the user, perhaps with additional filters or the option to fetch more citations into the existing dataset. Unfortunately at this stage, the data is largely static after it goes through so many stages of information retrieval and formatting to produce the visualisations. One approach to reduce the overhead of a user request is to categorise and index all information from PubMed as it is added to the database, as is done by GoPubMed \cite{gopubmed}. This project utilises a cache to achieve this on an incremental basis. Were the data more readily to hand, a more advanced working knowledge of D3 or other front-end visualisation libraries would be needed to allow the user to seamlessly organise the data themselves.\newline 
+
+\subsection{Geocoding}
+The lack of standardisation between journals, particularly with the diverse formatting of postal addresses from different countries, made the geocoding process less accurate. The unpredictability with which the separate components of an address are arranged meant that without an algorithm that recognises and tags the address, the formatting options are largely uninformed. It is beneficial to have a reference dataset to compare input to, such as the U.S. Census Bureau TIGER 2000 street database, as was employed by Ward and colleagues in tandem with a commercial geocoding solution \cite{ward}. There are a few open source solutions available, such as Pelias, a Node application by Samsung Research America (available at \url{https://github.com/pelias}) and GISgraphy, a Java library (available at \url{http://www.gisgraphy.com/xref/index.html}). Both utilise a number of open data sources such as OpenStreetMap to improve accuracy and global coverage. In hindsight, I think it would have been beneficial to investigate other geocoding options, as the efficacy of the application hinges upon the quality of the data retrieved. 
+
+\end{document}

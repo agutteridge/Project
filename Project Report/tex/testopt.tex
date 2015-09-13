@@ -1,16 +1,57 @@
 \documentclass[Report.tex]{subfiles}
 \begin{document}
 
-\chapter{Testing and Optimisation}
-Unit testing and manual testing methods were employed throughout development to ensure that each function continued to return results as expected. An example of a typical unit test is outlined in this chapter, with further elaboration on the methodology employed. A large part of this project concerned the retrieval and manipulation of data from various sources. Refining the input to the APIs and databases resulted in higher success rates of the queries, the creation of more informative datasets, and improved representation of data on the client side. The process of improving these aspects was iterative, and each modification was tested to assess whether the change in output had a positive effect. The key changes in geocoding, querying the MySQL database for concepts, and ordering the concept are discussed in the current chapter.
+\chapter{Testing}
+Unit testing and manual testing methods were employed throughout development to ensure that each function continued to return results as expected. An example of a typical unit test is outlined in this chapter, with further elaboration on the methodology employed.
 
-\section{Testing}
-\subsection{Unit Testing}
+\section{Unit Testing}
 Unit tests were written for key functions during development. This was important as the project consists of numerous modules, each of which contributes toward the end result; if a function is modified in a way that results in an unexpected side-effect it is easier to untangle the root cause from unit tests. Many of the functions written for data manipulation involve the organisation of Python dicts and lists to fit the format expected by the external services (databases and APIs) or for parsing as JSON Objects by the client-side. Test-Driven Development was utilised for these purposes, as the outcome was known before development began and tests could then be run to determine whether the function returned results as expected. To ensure maximum efficacy of these tests, production of side effects was reduced as much as was possible. \newline
 
-\noindent The key modules \texttt{geocode}, \texttt{metamap}, \texttt{umls} and \texttt{citations} each interacted with an external service, making automated testing laborious and time-consuming. In many cases it can be assumed that the service is working correctly, or any problems are beyond the scope of the application. Therefore, the functionality being tested was often not the HTTP requests and database calls themselves, but the Python underlying these calls. The Python library unittest.mock enables the patching of methods by decorating the test: the \texttt{@patch} decorator receives the function to patch as an argument, and returns the Mock object which is passed as an argument. Within the test, any calls to the patched function will behave as specified without any calls to the 'real' function. Tests have been included in the Appendix.
+\noindent The key modules \texttt{geocode}, \texttt{metamap}, \texttt{umls} and \texttt{citations} each interacted with an external service, making automated testing laborious and time-consuming. In many cases it can be assumed that the service is working correctly, or any problems are beyond the scope of the application. Therefore, the functionality being tested was often not the HTTP requests and database calls themselves, but the Python underlying these calls. The Python library \texttt{unittest.mock} enables the patching of methods by decorating the test: the \texttt{@patch} decorator receives the function to patch as an argument, and returns the Mock object which is passed as an argument. Within the test, any calls to the patched function will behave as specified without any calls to the 'real' function. An example can be seen below, wherein the function \texttt{geocode.request} is patched and supplied with a pre-determined return value.\newpage
 
-\subsection{Manual Testing}
-Broader testing of the application was carried out manually, to assess whether the system was functioning as a whole and returning the expected results in line with the input query. Statements are printed to the console at the start and end of key processes to keep track of what stage the application is in. This is particularly useful if one of the services hangs. A log file is written to show the results of individual queries, an example of which can be seen in Appendix \ref{App:AppendixA}. 
+\begin{lstlisting}
+@patch('app.geocode.request')
+def test_run(self, mock_request):
+    # patch geocode.request with example available from API docs
+    mock_request.return_value = fake_json('places_search_output.json')
+    # get_location_output.json contains one result from Places API
+    place_result = fake_json('get_location_output.json')
+
+    expected = {
+        'results': [
+            {
+                'PMID': '00000000',
+                'place': place_result
+            },
+            {
+                'PMID': '00000001',
+                'place': place_result
+            }
+        ],
+       'for_cache': [
+            {
+                'PMID': '00000000',
+                'placeids': [
+                    'ChIJyWEHuEmuEmsRm9hTkapTCrk'
+                ]
+            },
+            {
+                'PMID': '00000001',
+                'placeids': [
+                    'ChIJyWEHuEmuEmsRm9hTkapTCrk'
+                ]
+            }
+        ]
+    }
+
+    observed = geocode.run(fake_json('eFetch_sample.json'))
+    
+    self.assertEqual(mock_request.call_count, 2)
+    self.maxDiff = None
+    self.assertEqual(observed, expected)
+\end{lstlisting}
+
+\section{Manual Testing}
+Broader testing of the application was carried out manually to assess whether the system was functioning as a whole and returning the expected results in line with the input query. Statements are printed to the console at the start and end of key processes to keep track of what stage the application is in. This is particularly useful if one of the services hangs. A log file is written to show the results of individual queries, an example of which can be seen in the appendix, listing 3. 
 
 \end{document}
